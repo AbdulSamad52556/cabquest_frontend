@@ -1,0 +1,354 @@
+'use client'
+import React, { useEffect, useState } from 'react'
+import Header from '@/component/driver/driver_header/header'
+import { jwtDecode } from 'jwt-decode'
+import httpClient from '@/app/httpClient'
+import { LoadScript, DistanceMatrixService, GoogleMap, Marker, useJsApiLoader, Polyline, DirectionsService, Autocomplete, DirectionsRenderer } from '@react-google-maps/api';
+import Image from 'next/image'
+import { PhoneIcon, ChartBarIcon, ChatIcon, ArrowCircleDownIcon } from '@heroicons/react/solid';
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+import { getDistance } from 'geolib';
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
+interface Coordinates {
+    lat: number;
+    lon: number;
+}
+
+interface Coordinates {
+    latitude: number;
+    longitude: number;
+}
+
+const page = () => {
+    const [price, setPrice] = useState('')
+    const [currentLocation, setCurrentlocation] = useState('')
+    const [pickup, setPickup] = useState('')
+    const [destination, setDestination] = useState('')
+    const [pickupkm, setPickupkm] = useState(0)
+    const [totalkm, setTotalkm] = useState(0)
+    const [rideid, setRideid] = useState(0)
+    const [isLoading, setIsLoading] = useState(true);
+    const [center, setCenter] = useState({ lat: 0, lng: 0 });
+    const searchParams = useSearchParams()
+    const navigate = useRouter()
+    const [otp2, setOtp2] = useState('')
+    const [otp, setOtp] = useState('')
+    const [otpform, setOtpform] = useState(false)
+    const [directionsResponse, setDirectionsResponse] = useState(null);
+    const GEOCODING_API_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!,
+        // libraries: ['places']
+    });
+
+
+    const geocodePlaceName = async (placeName: string): Promise<Coordinates | null> => {
+        try {
+            const response = await axios.get(GEOCODING_API_URL, {
+                params: {
+                    address: placeName,
+                    key: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY,
+                },
+            });
+
+            const { data } = response;
+
+            if (data.status === 'OK') {
+                const { lat, lng } = data.results[0].geometry.location;
+                return { lat: lat, lon: lng };
+            } else {
+                console.error('Geocoding API error:', data.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching geocoding data:', error);
+            return null;
+        }
+    };
+
+    const isWithin3Km = (coord1: Coordinates, coord2: Coordinates): boolean => {
+        const distance = getDistance(
+            { latitude: coord1.lat, longitude: coord1.lng },
+            { latitude: coord2.lat, longitude: coord2.lon }
+        );
+        return distance <= 3000;
+    };
+
+    useEffect(() => {
+        const token = localStorage.getItem('daccessToken');
+        if (token) {
+            const decodedToken = jwtDecode(token);
+            const email = decodedToken.sub;
+
+            const getride = async () => {
+                const response = await httpClient.post('ride/getride', { 'email': email })
+                setRideid(response.data['ride']['id'])
+                setPrice(response.data['ride']['fare'])
+                setCurrentlocation(response.data['ride']['current_location'])
+                setPickup(response.data['ride']['pick_up_location'])
+                setDestination(response.data['ride']['drop_location'])
+                setPickupkm(parseFloat(response.data['ride']['pickupkm']))
+                setTotalkm(parseFloat(response.data['ride']['total_km']))
+            }
+            getride();
+            setIsLoading(false)
+        }
+
+    }, [])
+    useEffect(() => {
+
+        const getloc = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const current_Location = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        setCenter(current_Location);
+                        const token = localStorage.getItem('daccessToken');
+                        if (token) {
+                            const decodedToken = jwtDecode(token);
+                            const email = decodedToken.sub;
+                            const res = await httpClient.post('ride/liveloc', { 'email': email, 'coords': current_Location })
+                        }
+                    },
+                    (error) => {
+                        console.error("Error getting the current location: ", error);
+                    }
+                );
+
+            } else {
+                console.error("Geolocation is not supported by this browser.");
+            }
+        }
+        const intervalId = setInterval(getloc, 1000);
+        return () => clearInterval(intervalId);
+    }, []);
+
+    const getLocationName = async (lat: any, lng: any) => {
+        const apiKey = process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY;
+        const response = await axios.get(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
+        );
+        if (response.data.results && response.data.results.length > 0) {
+            return response.data.results[0].formatted_address;
+        } else {
+            return 'Location name not found';
+        }
+    };
+
+    const arrived = async () => {
+        const token = localStorage.getItem('daccessToken');
+        if (!token) {
+            // Handle the case where the token is not present
+            toast('No access token found', { type: 'error', theme: 'dark' });
+            return;
+        }
+    
+        try {
+            const decodedToken = jwtDecode(token);
+            const email = decodedToken.sub;
+            const current = await geocodePlaceName(pickup);
+    
+            if (isWithin3Km(center, current)) {
+                setOtpform(true);
+                const response = await httpClient.post('ride/driverarrived', { 'email': email });
+    
+                if (response.data['message'] === 'ok') {
+                    setOtp(response.data['otp']);
+                } else {
+                    toast('Failed to receive OTP', { type: 'error', theme: 'dark' });
+                }
+            } else {
+                toast('You are far from the pickup location', { type: 'warning', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+            }
+        } catch (error) {
+            // Log the error or show a generic message
+            console.error('An error occurred:', error);
+            toast('An error occurred while processing your request', { type: 'error', theme: 'dark' });
+        }
+    }
+    const confirmarrive = async()=>{
+        if (otp.toString() === otp2.toString()){
+            const token = localStorage.getItem('daccessToken');
+            if (token) {
+                const decodedToken = jwtDecode(token);
+                const email = decodedToken.sub;
+                const response = await httpClient.post('ride/tripstarted',{'email':email})
+                if (response.data['message'] === 'ok'){
+                    navigate.push('/destination')
+                }
+            }
+        }
+        else{
+            console.log('error')
+        }
+    }
+
+    useEffect(() => {
+        // Example function to fetch directions
+        const fetchDirections = () => {
+            try {
+                const directionsService = new window.google.maps.DirectionsService();
+                directionsService.route(
+                    {
+                        origin: currentLocation,
+                        destination: pickup,
+                        travelMode: window.google.maps.TravelMode.DRIVING,
+                    },
+                    (result, status) => {
+                        if (status === window.google.maps.DirectionsStatus.OK) {
+                            setDirectionsResponse(result);
+                        } else {
+                            console.error(`error fetching directions ${result}`);
+                        }
+                    }
+                );
+
+            } catch {
+
+            }
+
+        };
+
+        fetchDirections();
+    }, [currentLocation, pickup]);
+
+
+    return (
+        <div className='bg-white h-full lg:h-screen'>
+            <ToastContainer/>
+            
+
+
+            <div className='bg-secondary'>
+                <Header />
+            </div>
+
+            <div className='w-full flex flex-col lg:flex-row'>
+            {otpform && (
+                <div className="fixed flex justify-center items-center z-50 w-full h-1/2 ">
+                    <div className='bg-white p-10 rounded-md flex flex-col'>
+                        <div className='text-center w-full'>
+                            <h1 className='text-black text-center p-2 text-xl font-bold'>Enter otp</h1>
+                        </div>
+                        <div className='text-center w-full py-4'>
+                            <input type="number" className='p-2 w-full text-black focus:outline-none bg-gray-300 rounded-md' onChange={(e) => setOtp2(e.target.value)} />
+                        </div>
+                        <div className='text-center w-full py-4'>
+                            <button className='bg-black py-2 px-10 w-full rounded-md' onClick={confirmarrive}>Submit</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+                <div className='w-full justify-center lg:w-1/2 h-full bg-white p-10'>
+                    {isLoading ? (
+                        <div className='animate-pulse'>
+                            <div className='bg-white rounded-md shadow-md p-4 mb-4'>
+                                <h1 className='text-transparent bg-gray-200 h-8 mb-2 rounded-md'></h1>
+                                <div className='mb-2'>
+                                    <h1 className='text-transparent bg-gray-200 h-6'></h1>
+                                </div>
+                                <div className='mb-2'>
+                                    <h1 className='text-transparent bg-gray-200 h-6'></h1>
+                                </div>
+                                <div className='mb-4'>
+                                    <h1 className='text-transparent bg-gray-200 h-6'></h1>
+                                </div>
+                            </div>
+                            <div className='bg-white p-4 rounded-md shadow-md mb-4'>
+                                <h1 className='text-transparent bg-gray-200 h-6'></h1>
+                            </div>
+                            <div className='flex justify-center gap-4 mb-4'>
+                                <div className='bg-white p-2 rounded-md shadow-md'>
+                                    <button className='text-transparent bg-gray-200 h-8 w-20 rounded-md'></button>
+                                </div>
+                                <div className='bg-white p-2 rounded-md shadow-md'>
+                                    <div className='text-transparent bg-gray-200 h-8 w-8 rounded-full'></div>
+                                </div>
+                                <div className='bg-white p-2 rounded-md shadow-md'>
+                                    <div className='text-transparent bg-gray-200 h-8 w-8 rounded-full'></div>
+                                </div>
+                            </div>
+                            <div className='p-2 bg-black rounded-lg'>
+                                <button className='text-transparent bg-gray-800 h-10 w-full rounded-lg'></button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className='bg-gray-300 px-6 py-4 text-center rounded-md shadow-md'>
+                            <div className='bg-white rounded-md shadow-md hover:shadow-xl transition duration-300 p-4'>
+                                <h1 className='text-black text-center text-lg font-semibold mb-4'>₹ {price}</h1>
+                                <div className='mb-2'>
+                                    <h1 className='text-gray-800 text-sm'>To Pickup: {pickupkm} km</h1>
+                                </div>
+                                <div className='mb-2'>
+                                    <h1 className='text-gray-800 text-sm'>To Destination: {totalkm} km</h1>
+                                </div>
+                                <div className='mb-2'>
+                                    <h1 className='text-gray-800 text-sm'>Total Distance: {(parseFloat(pickupkm) + parseFloat(totalkm)).toFixed(2)} km</h1>
+                                </div>
+                            </div>
+                            <div className='py-2'>
+                                <div className='bg-white p-4 rounded-md hover:shadow-xl transition duration-300 shadow-md'>
+                                    <h1 className='text-gray-800 text-sm'>Pickup Location: {pickup}</h1>
+                                </div>
+                            </div>
+
+                            <div className='flex justify-center gap-4'>
+                                <div className='bg-white text-black text-sm shadow-md hover:shadow-xl transition duration-300 p-2 rounded-md'>
+                                    <button>cancel</button>
+                                </div>
+                                <div className='bg-white p-2 rounded-md shadow-md hover:shadow-xl transition duration-300'>
+                                    <PhoneIcon className="z-0 right-2 top-2.5 h-5 w-5 text-gray-800" />
+                                </div>
+                                <div className='bg-white p-2 rounded-md shadow-md hover:shadow-xl transition duration-300' onClick={()=>navigate.push('/chat1')}>
+                                    <ChatIcon className="z-0 right-2 top-2.5 h-5 w-5 text-gray-800" />
+                                </div>
+                            </div>
+                            <div className='mt-4'>
+                                <div className='p-2 bg-black rounded-lg hover:bg-gray-800 transition duration-300' onClick={arrived}>
+                                    <button className='text-white font-semibold px-2 '>Arrived</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                </div>
+                <div className='w-full lg:w-1/2 bg-white shadow-lg'>
+                    <div className='p-10'>
+                        <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}>
+                            <GoogleMap
+                                center={center}
+                                zoom={15}
+                                mapContainerStyle={{ height: `350px`, width: '100%' }}
+                                options={{ zoomControl: false, streetViewControl: false }}
+                            // onLoad={(map) => setMap(map)}
+                            >
+                                <Marker position={center} />
+                                {directionsResponse && (<DirectionsRenderer
+                                    directions={directionsResponse}
+                                    options={{
+                                        polylineOptions: {
+                                            strokeColor: '#0077B6',
+                                            strokeWeight: 4,
+
+                                        },
+                                    }}
+                                />
+                                )}
+
+                            </GoogleMap></LoadScript>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default page
