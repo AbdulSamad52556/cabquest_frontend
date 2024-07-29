@@ -6,8 +6,12 @@ import image from '../../../../public/static/WhatsApp_Image_2024-06-05_at_23.43.
 import image2 from '../../../../public/static/WhatsApp Image 2024-06-06 at 10.26.33_cb208a6f.jpg'
 
 const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef(null);
   const [isProductMenuOpen, setIsProductMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [accessToken, setAccesstoken] = useState<string | null>('')
+  const [fullname, setFullname] = useState<string | null>('')
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -16,12 +20,13 @@ const Header = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const accessToken = localStorage.getItem('accessToken')
-
-  const fullname = localStorage.getItem('name')
-
-  const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef(null);
+  useEffect(()=>{
+    const accessToken = localStorage.getItem('accessToken')
+    const fullname = localStorage.getItem('name')
+    setAccesstoken(accessToken)
+    setFullname(fullname)
+  
+  })
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

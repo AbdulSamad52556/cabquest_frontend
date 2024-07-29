@@ -9,6 +9,7 @@ import httpClient from '@/app/httpClient';
 import {jwtDecode} from 'jwt-decode';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/navigation';
 
 type LocationState = {
   latitude: number | null;
@@ -30,6 +31,7 @@ const Home: React.FC<HomeProps> = ({ getlocation }) => {
   const [error, setError] = useState<string | null>(null);
   const [isActive, setActive] = useState<boolean>(false)
   const [spin, setSpin] = useState(false)
+  const navigate = useRouter();
 
   useEffect(() => {
     if (localStorage.getItem('isactive')) {
@@ -62,6 +64,7 @@ const Home: React.FC<HomeProps> = ({ getlocation }) => {
       const email = decodedToken.sub;
 
       const response = await httpClient.post('auth/makeactive', { email, location })
+      const response2 = await httpClient.post('ride/liveloc', { 'email':email, 'coords':{'lat':location['latitude'], 'lng':location['longitude']} })
       console.log(response.data['message'])
       if (response.data['message'] === 'ok') {
         setActive(true)
@@ -86,10 +89,10 @@ const Home: React.FC<HomeProps> = ({ getlocation }) => {
 
         const loc = { latitude: null, longitude: null }
         const response = await httpClient.post('auth/makeinactive', { email, loc })
+        const response2 = await httpClient.post('ride/liveloc', { 'email':email, 'coords':{'lat':null, 'lng':null} })
         if (response.data['message'] === 'ok') {
           setActive(false)
           localStorage.removeItem('isactive')
-          // toast('work stopped', { type: 'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false, closeButton: false })
         }
       }
     }
@@ -113,7 +116,7 @@ const Home: React.FC<HomeProps> = ({ getlocation }) => {
             </h1>
 
             <div className='flex justify-end gap-2 p-5 w-full'>
-              <button className='border-4 text-xs w-60 border-violet-800 border-opacity-30 hover:border-opacity-60 text-gray-300 md:px-10 md:py-2 px-8 py-1 rounded-md'>My Earnings</button>
+              <button className='border-4 text-xs w-60 border-violet-800 border-opacity-30 hover:border-opacity-60 text-gray-300 md:px-10 md:py-2 px-8 py-1 rounded-md' onClick={()=>{navigate.push('/earnings')}}>My Earnings</button>
               {isActive ?
                 <button className='relative flex items-center border-4 text-xs border-none bg-violet-800 bg-opacity-60 hover:bg-opacity-30 text-gray-300 md:px-10 md:py-2 px-8 py-1 rounded-md' onClick={stopWork}>
                   Stop Duty

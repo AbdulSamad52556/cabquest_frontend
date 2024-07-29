@@ -12,7 +12,7 @@ const page = () => {
     const [pickupkm, setPickupkm] = useState(0)
     const [totalkm, setTotalkm] = useState(0)
     const [isLoading, setIsLoading] = useState(true);
-    const [directionsResponse, setDirectionsResponse] = useState(null);
+    const [directionsResponse, setDirectionsResponse] = useState<google.maps.DirectionsResult | null>(null);
     const [currentLocation, setCurrentlocation] = useState('')
     const [rideid, setRideid] = useState(0)
     const navigate = useRouter()
@@ -20,6 +20,7 @@ const page = () => {
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!,
+        libraries: ['places', 'maps']
     });
 
     useEffect(() => {
@@ -122,7 +123,7 @@ const page = () => {
             </div>
             <div className='w-full bg-white '>
                 <div className='p-10 flex justify-center'>
-                    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}>
+                    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!}>
                         <GoogleMap
                             center={center}
                             zoom={15}

@@ -7,7 +7,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import httpClient from '@/app/httpClient';
 import axios from 'axios';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { XIcon } from '@heroicons/react/solid';
 import socketIOClient from 'socket.io-client';
 import { useRouter } from 'next/navigation';
@@ -17,12 +17,21 @@ interface Location {
   longitude: number;
 }
 
+interface Vehicle {
+  id: number;
+  type: string;
+}
+
 interface DecodedToken {
   sub: string;
 }
 
 interface DirectionResult {
   request: google.maps.DirectionsRequest;
+}
+
+interface ApiResponse {
+  vehicles: Vehicle[];
 }
 
 const Page: React.FC = () => {
@@ -34,17 +43,18 @@ const Page: React.FC = () => {
   const [duration, setDuration] = useState<string>('');
   const [distance, setDistance] = useState<string>('');
   const [location, setLocation] = useState<string>('');
-  const [vehicles, setVehicles] = useState<string[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [selectedVehicle, setSelectedVehicle] = useState<string>('');
   const [price, setPrice] = useState<number | null>(null);
   const [email, setEmail] = useState<string>('');
   const [spin2, setSpin2] = useState(false);
   const [coords, setCoords] = useState({ lat: null, lng: null });
   const router = useRouter();
+  const google = window.google;
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!,
-    libraries: ['places']
+    libraries: ['places', 'maps']
   });
 
   useEffect(() => {
@@ -52,6 +62,14 @@ const Page: React.FC = () => {
       router.push('/login');
     }
   }, [router]);
+
+  useEffect(() => {
+    const fetchvehicles = async () => {
+      const response = await httpClient.get('auth/allvehicles')
+      setVehicles(response.data['vehicles'])
+    }
+    fetchvehicles();
+  }, [])
 
   useEffect(() => {
     const getLocation = () => {
@@ -107,7 +125,6 @@ const Page: React.FC = () => {
   };
 
   const getResult = (result: google.maps.DirectionsResult | null, duration: string, distance: string) => {
-    console.log(result, duration, distance)
     setSpin2(true);
     setPrice(null);
     setSelectedVehicle('');
@@ -115,18 +132,27 @@ const Page: React.FC = () => {
     setDuration(duration);
     setDistance(distance);
 
-    const get_driver = async () => {
-      const response = await httpClient.post('booking/get_driver', result?.request);
-      setVehicles(response.data['vehicles']);
-      setIsFormVisible(true);
-      setSpin2(false);
+    const getDriver = async () => {
+      try {
+        const response = await httpClient.post('booking/get_driver', result?.request);
+        const uniqueTypes = Array.from(new Set(response.data['vehicles'].map((item: Vehicle) => item.type)));
+        const uniqueData = vehicles.filter(item =>
+          !uniqueTypes.includes(item.type)
+        );
+        const mergedData = [...response.data['vehicles'], ...uniqueData];
+        setVehicles(mergedData)
+        setIsFormVisible(true);
+        setSpin2(false);
+      } catch (error) {
+        console.error('Error getting driver:', error);
+      }
     };
-    get_driver();
+    getDriver();
   };
 
   const handleVehicleChange = (vehicle: string) => {
     if (selectedVehicle === vehicle) {
-      setSelectedVehicle(''); // Deselect if already selected
+      setSelectedVehicle('');
     } else {
       setSelectedVehicle(vehicle);
       const getprice = async (vehicle: string) => {
@@ -147,33 +173,44 @@ const Page: React.FC = () => {
 
     const get_driver = async () => {
       setSpin2(true);
-      const data = {
-        'email': email,
-        'vehicle': selectedVehicle,
-        'latitude': userLocation?.latitude,
-        'longitude': userLocation?.longitude,
-        'price': price,
-        'direction': directionResponse,
-        'distance': distance
-      };
 
       try {
-        const response = await httpClient.post('booking/riderequest', data);
-        if (response.data['message'] === 'driver is not available' || response.data['message'] === 'user not found') {
-          toast(response.data['message'], { type: 'warning', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
-        } else if (response.data['message'] === 'searching for driver') {
-          router.push(`/searchingdriver?userid=${response.data['userid']}&driverid=${response.data['driverid']}`);
-        }
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          const decodedToken = jwtDecode<DecodedToken>(token);
+          const email = decodedToken.sub
+          const data = {
+            'email': email,
+            'vehicle': selectedVehicle,
+            'latitude': userLocation?.latitude,
+            'longitude': userLocation?.longitude,
+            'price': price,
+            'direction': directionResponse,
+            'distance': distance
+          };
+          const response = await httpClient.post('booking/riderequest', data);
+          if (response.data['message'] === 'driver is not available' || response.data['message'] === 'user not found') {
+            toast(response.data['message'], { type: 'warning', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+          } else if (response.data['message'] === 'searching for driver') {
+            router.push(`/searchingdriver?userid=${response.data['userid']}&driverid=${response.data['driverid']}`);
+          }
+        };
+
       } catch (error) {
         console.error("Error during driver request:", error);
         toast("An error occurred. Please try again.", { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
       } finally {
         setSpin2(false);
       }
-    };
+    }
+
 
     get_driver();
   };
+
+  const onUnmount = React.useCallback(function callback(map: any) {
+    setMap(null)
+  }, [])
 
   const getPlaceName = async (lat: number, lng: number) => {
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}`;
@@ -198,7 +235,6 @@ const Page: React.FC = () => {
   if (!isLoaded || !spin) {
     return (
       <div className='bg-white w-full h-screen flex justify-center items-center'>
-        <ToastContainer />
         <span className="loading loading-spinner loading-lg"></span>
       </div>
     );
@@ -221,13 +257,13 @@ const Page: React.FC = () => {
         </div>
         <div className='xs:w-full sm:w-full md:w-3/5 xs:p-10 sm:p-10 md:p-0 mb-2'>
           {userLocation && (
-           
             <GoogleMap
               center={{ lat: userLocation.latitude, lng: userLocation.longitude }}
               zoom={15}
-              mapContainerStyle={{ height: `500px`, width: '100%' }}
+              mapContainerStyle={{ height: '500px', width: '100%' }}
               options={{ zoomControl: false, streetViewControl: false }}
               onLoad={(map) => setMap(map)}
+              onUnmount={onUnmount}
             >
               <Marker position={{ lat: userLocation.latitude, lng: userLocation.longitude }} />
               {directionResponse && <DirectionsRenderer directions={directionResponse} />}
@@ -238,7 +274,7 @@ const Page: React.FC = () => {
 
       {isFormVisible && (
         <div className="absolute w-full h-full top-0 flex justify-center items-center bg-black bg-opacity-50">
-          <div className="relative bg-white p-8 rounded-lg shadow-lg w-80 transition transform duration-300 ease-in-out scale-100 hover:scale-105">
+          <div className="relative bg-white p-8 rounded-lg shadow-lg w-96 transition transform duration-300 ease-in-out scale-100 hover:scale-105">
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
               onClick={closeForm}
@@ -247,44 +283,72 @@ const Page: React.FC = () => {
             </button>
             <h2 className="text-2xl font-bold mb-6 text-gray-800">Choose a Ride</h2>
             {distance && (
-              <div className="mb-4 bg-gray-300 rounded-lg p-1">
-                <p className="text-white bg-black p-2 rounded-lg">Distance: {distance}</p>
-                <p className="text-white bg-black p-2 rounded-lg">Duration: {duration}</p>
+              <div className="mb-4 rounded-lg p-1">
+                <p className="text-white bg-black p-1 mb-1 rounded-md text-center">Distance: {distance}</p>
+                <p className="text-white bg-black p-1 rounded-md text-center">Duration: {duration}</p>
               </div>
             )}
-            {vehicles ?
-              <div className="space-y-4">
+            {Array.isArray(vehicles) &&
+            vehicles ? (
+              <div className="space-y-4 w-full">
                 {vehicles.map((vehicle, index) => (
                   <div
                     key={index}
-                    className={`flex items-center p-4 rounded-lg cursor-pointer transition transform duration-200 ease-in-out ${
-                      selectedVehicle === vehicle ? 'bg-violet-500 text-white' : 'bg-gray-200 text-gray-800'
-                    } hover:bg-blue-400 hover:text-white`}
-                    onClick={() => handleVehicleChange(vehicle)}
+                    className={`flex items-center p-4 w-80 rounded-lg cursor-pointer transition transform duration-200 ease-in-out ${selectedVehicle === vehicle['type']
+                      ? 'bg-violet-500 text-white'
+                      : 'bg-gray-200 text-gray-800'
+                      } ${vehicle['id'] === 0 ? ' hover:text-black hover:bg-gray-300  transition transform duration-200 ease-in-out' : 'hover:bg-blue-400 hover:text-white'}`}
+                    onClick={() => {
+                      if (vehicle.id !== 0) {
+                        handleVehicleChange(vehicle['type']);
+                      }
+                    }}
                   >
-                    <input
-                      type="radio"
-                      id={`vehicle-${index}`}
-                      name="vehicle"
-                      value={vehicle}
-                      checked={selectedVehicle === vehicle}
-                      readOnly
-                      className="mr-2 hidden"
-                    />
-                    <label htmlFor={`vehicle-${index}`} className="cursor-pointer" onClick={() => handleVehicleChange(vehicle)}>
-                      {vehicle}
-                    </label>
+                    {vehicle.id === 0 ? (
+                      <>
+                        <input
+                          type="radio"
+                          id={`vehicle-${index}`}
+                          name="vehicle"
+                          value={vehicle['type']}
+                          checked={selectedVehicle === vehicle['type']}
+                          readOnly
+                          className="mr-2 hidden"
+                        />
+                        <label htmlFor={`vehicle-${index}`} className=" cursor-not-allowed text-gray-400">
+                          {vehicle['type']} (Driver not available)
+                        </label>
+                      </>
+                    ) : (
+                      <>
+                        <input
+                          type="radio"
+                          id={`vehicle-${index}`}
+                          name="vehicle"
+                          value={vehicle['type']}
+                          checked={selectedVehicle === vehicle['type']}
+                          readOnly
+                          className="mr-2 hidden"
+                        />
+                        <label htmlFor={`vehicle-${index}`} className="cursor-pointer">
+                          {vehicle['type']}
+                        </label>
+                      </>
+                    )}
                   </div>
                 ))}
-              </div> : <h1 className='text-black'>loading...</h1>
-            }
+              </div>
+            ) : (
+              <h1 className='text-black'>loading...</h1>
+            )}
+
             {price ?
               <div className="mt-4 text-gray-600">
                 <p>Total Price: ₹{price}</p>
               </div>
               :
               <div className="mt-4 text-gray-600">
-                <p>wait for the price...</p>
+                <p>select one for getting price</p>
               </div>}
             <button type="submit" onClick={confirmbooking} className="w-full bg-primary text-white py-2 px-4 rounded mt-6 transition transform duration-300 ease-in-out hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
               Submit

@@ -17,15 +17,15 @@ const page = () => {
     const [loading, setLoading] = useState(false)
 
 
-    useEffect(()=>{
+    useEffect(() => {
         const toke = localStorage.getItem('isadmin')
         if (toke) {
             navigate.push('/dashboard')
         }
-        else{
+        else {
             setLoading(true)
         }
-    },[])
+    }, [])
 
 
     const handleSubmit = async (e: { preventDefault: () => void }) => {
@@ -35,19 +35,25 @@ const page = () => {
             'email': email,
             'password': password
         }
-        const response = await httpClient.post('auth/admin_login', data);
-        if (response.data['message'] === 'Login successful') {
-            const access_token = response.data.a_tokens.accessToken;
-            const refresh_token = response.data.a_tokens.refreshToken;
+        try {
 
-            localStorage.setItem('aaccessToken', access_token);
-            localStorage.setItem('arefreshToken', refresh_token);
-            localStorage.setItem('aname', response.data.a_tokens.fullname)
-            localStorage.setItem('isadmin', 'true')
-            localStorage.setItem('aloading',response.data['message'])
-            navigate.push('/dashboard')
-        } else {
-            toast(response.data.message, { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false, })
+            const response = await httpClient.post('auth/admin_login', data);
+            if (response.data['message'] === 'Login successful') {
+                const access_token = response.data.a_tokens.accessToken;
+                const refresh_token = response.data.a_tokens.refreshToken;
+
+                localStorage.setItem('aaccessToken', access_token);
+                localStorage.setItem('arefreshToken', refresh_token);
+                localStorage.setItem('aname', response.data.a_tokens.fullname)
+                localStorage.setItem('isadmin', 'true')
+                localStorage.setItem('aloading', response.data['message'])
+                navigate.push('/dashboard')
+            } else {
+                toast(response.data.message, { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false, })
+            }
+        }
+        catch {
+            toast('credantials are not found', { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false, })
         }
     }
 

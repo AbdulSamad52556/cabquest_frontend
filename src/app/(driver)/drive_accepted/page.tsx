@@ -5,7 +5,7 @@ import { jwtDecode } from 'jwt-decode'
 import httpClient from '@/app/httpClient'
 import { LoadScript, DistanceMatrixService, GoogleMap, Marker, useJsApiLoader, Polyline, DirectionsService, Autocomplete, DirectionsRenderer } from '@react-google-maps/api';
 import Image from 'next/image'
-import { PhoneIcon, ChartBarIcon, ChatIcon, ArrowCircleDownIcon } from '@heroicons/react/solid';
+import { PhoneIcon, ChartBarIcon, ChatIcon, ArrowCircleDownIcon, StopIcon } from '@heroicons/react/solid';
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
@@ -14,13 +14,13 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 interface Coordinates {
-    lat: number;
-    lon: number;
+    lat: number | null;
+    lon: number | null;
 }
 
 interface Coordinates {
-    latitude: number;
-    longitude: number;
+    latitude: number | null;
+    longitude: number | null;
 }
 
 const page = () => {
@@ -29,21 +29,25 @@ const page = () => {
     const [pickup, setPickup] = useState('')
     const [destination, setDestination] = useState('')
     const [pickupkm, setPickupkm] = useState(0)
+    const [demail, setEmail] = useState<string | undefined>('')
     const [totalkm, setTotalkm] = useState(0)
     const [rideid, setRideid] = useState(0)
     const [isLoading, setIsLoading] = useState(true);
     const [center, setCenter] = useState({ lat: 0, lng: 0 });
     const searchParams = useSearchParams()
+    const [phone, setPhone] = useState('')
     const navigate = useRouter()
     const [otp2, setOtp2] = useState('')
     const [otp, setOtp] = useState('')
     const [otpform, setOtpform] = useState(false)
-    const [directionsResponse, setDirectionsResponse] = useState(null);
+    const [directionsResponse, setDirectionsResponse] = useState<object | null>({});
+    const [reason, setReason] = useState('')
+    const [cancelform, setCancelform] = useState<boolean>(false);
     const GEOCODING_API_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!,
-        // libraries: ['places']
+        libraries: ['maps', 'places'],
     });
 
 
@@ -84,7 +88,7 @@ const page = () => {
         if (token) {
             const decodedToken = jwtDecode(token);
             const email = decodedToken.sub;
-
+            setEmail(email)
             const getride = async () => {
                 const response = await httpClient.post('ride/getride', { 'email': email })
                 setRideid(response.data['ride']['id'])
@@ -94,6 +98,7 @@ const page = () => {
                 setDestination(response.data['ride']['drop_location'])
                 setPickupkm(parseFloat(response.data['ride']['pickupkm']))
                 setTotalkm(parseFloat(response.data['ride']['total_km']))
+                setPhone(response.data['ride']['phone'])
             }
             getride();
             setIsLoading(false)
@@ -146,7 +151,6 @@ const page = () => {
     const arrived = async () => {
         const token = localStorage.getItem('daccessToken');
         if (!token) {
-            // Handle the case where the token is not present
             toast('No access token found', { type: 'error', theme: 'dark' });
             return;
         }
@@ -220,6 +224,48 @@ const page = () => {
         fetchDirections();
     }, [currentLocation, pickup]);
 
+    const handleClick = () => {
+        window.location.href = `tel:${phone}`;
+    };
+    
+    const cancelRequest = async() =>{
+        try{
+            const response = await httpClient.post('ride/cancelfromdriver',{'rideid':rideid,'reason':reason})
+            const response2 = await httpClient.post('booking/cancelledbydriver',{'email':demail, 'reason':reason})
+            const response3 = await httpClient.post('auth/makeactive2',{ 'driverid':response2.data['driverid'] })
+            if( response.data['message'] === 'ok' && response2.data['message'] === 'ok' && response3.data['message'] === 'ok'){
+                toast('Your ride is cancelled',{type:'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+                setTimeout(()=>{
+                    navigate.push('/driver_hub')
+                },1500);
+            }
+            else{
+                toast('something error',{type:'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+            }
+        }
+        catch{
+        }
+    }
+
+    // if (!isLoaded) {
+    //     return (
+    //       <div className='bg-white w-full h-screen flex justify-center items-center'>
+    //         <span className="loading loading-spinner loading-lg"></span>
+    //       </div>
+    //     );
+    //   }
+
+    useEffect(()=>{
+        const checkusercancelled = async()=>{
+            const response = await httpClient.post('ride/checkusercancelled',{'rideid':rideid,})
+            if (response.data['message'] === 'cancelled'){
+                navigate.push('/user_cancelled')
+            }
+        }
+        const intervalId = setInterval(checkusercancelled, 1000);
+        return () => clearInterval(intervalId);
+    },[rideid])
+
 
     return (
         <div className='bg-white h-full lg:h-screen'>
@@ -230,7 +276,22 @@ const page = () => {
             <div className='bg-secondary'>
                 <Header />
             </div>
-
+            {cancelform && (
+          <div className="fixed flex justify-center items-center z-50 w-full h-1/2 ">
+            <div className='bg-white p-10 rounded-md flex flex-col'>
+            <button className='text-black self-end' onClick={()=>setCancelform(false)}> ✗</button>
+              <div className='text-center w-full'>
+                <h1 className='text-black text-center p-2 text-xl font-bold'>Enter your reason</h1>
+              </div>
+              <div className='text-center w-full py-4'>
+                <input type="text" className='p-2 w-full text-black focus:outline-none bg-gray-300 rounded-md' onChange={(e)=>setReason(e.target.value)}/>
+              </div>
+              <div className='text-center w-full py-4'>
+                <button className='bg-black py-2 px-10 w-full rounded-md' onClick={cancelRequest}>Submit</button>
+              </div>
+            </div>
+          </div>
+        )}
             <div className='w-full flex flex-col lg:flex-row'>
             {otpform && (
                 <div className="fixed flex justify-center items-center z-50 w-full h-1/2 ">
@@ -301,10 +362,10 @@ const page = () => {
                             </div>
 
                             <div className='flex justify-center gap-4'>
-                                <div className='bg-white text-black text-sm shadow-md hover:shadow-xl transition duration-300 p-2 rounded-md'>
+                                <div className='bg-white text-black text-sm shadow-md hover:shadow-xl transition duration-300 p-2 rounded-md' onClick={()=>setCancelform(true)}>
                                     <button>cancel</button>
                                 </div>
-                                <div className='bg-white p-2 rounded-md shadow-md hover:shadow-xl transition duration-300'>
+                                <div className='bg-white p-2 rounded-md shadow-md hover:shadow-xl transition duration-300' onClick={handleClick}>
                                     <PhoneIcon className="z-0 right-2 top-2.5 h-5 w-5 text-gray-800" />
                                 </div>
                                 <div className='bg-white p-2 rounded-md shadow-md hover:shadow-xl transition duration-300' onClick={()=>navigate.push('/chat1')}>
@@ -322,13 +383,12 @@ const page = () => {
                 </div>
                 <div className='w-full lg:w-1/2 bg-white shadow-lg'>
                     <div className='p-10'>
-                        <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}>
+                        <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!}>
                             <GoogleMap
                                 center={center}
                                 zoom={15}
                                 mapContainerStyle={{ height: `350px`, width: '100%' }}
                                 options={{ zoomControl: false, streetViewControl: false }}
-                            // onLoad={(map) => setMap(map)}
                             >
                                 <Marker position={center} />
                                 {directionsResponse && (<DirectionsRenderer

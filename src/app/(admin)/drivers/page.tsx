@@ -27,7 +27,7 @@ const page = () => {
       setLoading(true);
       try {
         const response = await httpClient.get('auth/drivers');
-          setDrivers(response.data);
+        setDrivers(response.data);
       } catch (error) {
         console.error('Error fetching drivers:', error);
       } finally {
@@ -38,28 +38,28 @@ const page = () => {
   }, [search]);
 
 
-  useEffect(()=>{
-    try{
+  useEffect(() => {
+    try {
       const token = localStorage.getItem('isadmin')
-      if(token){
+      if (token) {
         setSpin(true)
-      }else{
+      } else {
         navigate.push('admin_login')
       }
-    }catch{
+    } catch {
 
     }
-  },[])
+  }, [])
 
-  const handlechange = async()=>{
-    const response = await httpClient.post('auth/searchdriver',{'val':input})
+  const handlechange = async () => {
+    const response = await httpClient.post('auth/searchdriver', { 'val': input })
     setSearch(response.data);
   }
 
   if (!spin) {
     return (
       <div className='bg-white w-full h-screen flex justify-center items-center'>
-      <ToastContainer />
+        <ToastContainer />
         <span className="loading loading-spinner loading-lg"></span>
       </div>
     )
@@ -72,7 +72,7 @@ const page = () => {
       </div>
       <div className='w-full bg-white p-3 '>
 
-      <input type="text" onChange={handlechange} className="px-4 text-black bg-gray-300 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none "/>
+        <input type="text" onChange={handlechange} className="px-4 text-black bg-gray-300 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none " />
 
         <div className="container px-5 mx-auto py-10">
           <div className="overflow-x-auto">
@@ -88,7 +88,6 @@ const page = () => {
                     <tr className="bg-territory text-white text-center">
                       <th className="py-3 px-4">ID</th>
                       <th className="py-3 px-4">FULLNAME</th>
-                      {/* <th className="py-3 px-4">VEHICLE</th> */}
                       <th className="py-3 px-4">EMAIL</th>
                       <th className="py-3 px-4">PHONE</th>
                       <th className="py-3 px-4">STATUS</th>

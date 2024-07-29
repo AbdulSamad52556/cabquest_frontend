@@ -6,6 +6,8 @@ import { LoadScript, DistanceMatrixService, GoogleMap, Marker, useJsApiLoader, P
 import { jwtDecode } from 'jwt-decode';
 import httpClient from '@/app/httpClient';
 import { useRouter } from 'next/navigation'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface DecodedToken {
     sub: string;
@@ -23,18 +25,20 @@ const page = () => {
     const [directionsResponse, setDirectionsResponse] = useState<google.maps.DirectionsResult | null>(null);
     const [isfetch, setIsfetch] = useState(true)
     const navigate = useRouter()
-    const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
-        googleMapsApiKey: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!,
-        // libraries: ['places']
-    });
+    const [reason, setReason] = useState('')
+    const [cancelform, setCancelform] = useState<boolean>(false);
+    const [phone, setPhone] = useState('')
+    // const { isLoaded } = useJsApiLoader({
+    //     id: 'google-map-script',
+    //     googleMapsApiKey: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!,
+    //     libraries: ['maps', 'places'],
+    // });
 
     useEffect(() => {
         const fetchDirections = () => {
             try {
                 const directionsService = new window.google.maps.DirectionsService();
-                console.log(currentLocation)
-                console.log(pick_up_location)
+
                 directionsService.route(
                     {
                         origin: currentLocation,
@@ -55,7 +59,9 @@ const page = () => {
             }
 
         };
-        fetchDirections();
+        const intervalId = setInterval(fetchDirections, 1000);
+        return () => clearInterval(intervalId);
+        // fetchDirections();
     }, [currentLocation, pick_up_location]);
 
     useEffect(() => {
@@ -73,28 +79,56 @@ const page = () => {
                 setPickuplocation(response.data['ride']['pick_up_location'])
                 setCenter({ lat: parseFloat(response.data['ride']['live']['lat']), lng: parseFloat(response.data['ride']['live']['lng']) });
                 setIsfetch(false)
+                setPhone(response.data['ride']['phone'])
             }
         }
         getrideuser();
 
     }, [])
 
-    useEffect(()=>{
-        const driverarrived = async() =>{
+    useEffect(() => {
+        const driverarrived = async () => {
             const token = localStorage.getItem('accessToken');
+            const rideid = localStorage.getItem('rideid')
             if (token) {
                 const decodedToken = jwtDecode<DecodedToken>(token);
                 const email = decodedToken.sub
-                const response = await httpClient.post('ride/istripstarted',{'email':email})
-                if (response.data['message'] === 'trip started'){
+                const response = await httpClient.post('ride/istripstarted', { 'email': email, 'rideid': rideid })
+                if (response.data['message'] === 'trip started') {
                     navigate.push('/udestination')
                 }
+                else if (response.data['message'] === 'driver is cancelled') {
+                    navigate.push('/driver_cancelled')
+                }
+            }
+        }
+        const intervalId = setInterval(driverarrived, 1000);
+        return () => clearInterval(intervalId);
+    }, [])
+
+    const handleClick = () => {
+        window.location.href = `tel:${phone}`;
+    };
+    const cancelRequest = async() =>{
+        const token = localStorage.getItem('accessToken');
+        const rideid = localStorage.getItem('rideid')
+        if (token) {
+            const decodedToken = jwtDecode<DecodedToken>(token);
+            const email = decodedToken.sub
+            const response = await httpClient.post('ride/cancelfromuser',{'rideid':rideid,'reason':reason})
+            const response2 = await httpClient.post('booking/cancelfromuser',{'email':email, 'reason':reason})
+            const response3 = await httpClient.post('auth/makeactive2',{'driverid':response2.data['driverid']})
+            if( response.data['message'] === 'ok' && response2.data['message'] === 'ok' && response3.data['message'] === 'ok'){
+                toast('Your ride is cancelled',{type:'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+                setTimeout(()=>{
+                    navigate.push('/ride')
+                },1500);
+            }
+            else{
+                toast('something error',{type:'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+            }
         }
     }
-    const intervalId = setInterval(driverarrived, 1000);
-        return () => clearInterval(intervalId);
-    },[])
-
 
     return (
         <div className='bg-white h-screen'>
@@ -103,6 +137,8 @@ const page = () => {
             </div>
             <div className='w-full flex bg-white flex-col lg:flex-row'>
                 <div className='w-full lg:w-1/2 flex justify-center items-center p-5'>
+
+                    <ToastContainer/>
 
                     {isfetch ? (
                         <div className="border-2 w-full lg:w-1/2 border-gray-300 p-2 rounded-lg">
@@ -190,15 +226,15 @@ const page = () => {
                                     </table>
                                 </div>
                                 <div className='flex flex-col justify-around space-y-2'>
-                                    <button className='bg-black hover:bg-gray-800 transition duration-300 py-2 px-6 rounded-md flex justify-center items-center'>
+                                    <button className='bg-black hover:bg-gray-800 transition duration-300 py-2 px-6 rounded-md flex justify-center items-center' onClick={handleClick}>
                                         <PhoneIcon className="h-5 w-5 text-gray-200 mr-2" />
                                         <span className="text-white">Call</span>
                                     </button>
-                                    <button className='bg-black hover:bg-gray-800 transition duration-300 py-2 px-6 rounded-md flex justify-center items-center ' onClick={()=>navigate.push('/chat2')}>
+                                    <button className='bg-black hover:bg-gray-800 transition duration-300 py-2 px-6 rounded-md flex justify-center items-center ' onClick={() => navigate.push('/chat2')}>
                                         <ChatIcon className="h-5 w-5 text-gray-200 mr-2" />
                                         <span className="text-white">Chat</span>
                                     </button>
-                                    <button className='bg-red-600 hover:bg-red-500 transition duration-300 py-2 px-6 text-sm text-white rounded-md'>
+                                    <button className='bg-red-600 hover:bg-red-500 transition duration-300 py-2 px-6 text-sm text-white rounded-md' onClick={()=>{setCancelform(true)}}>
                                         Cancel
                                     </button>
                                 </div>
@@ -207,10 +243,26 @@ const page = () => {
 
                         )}
                 </div>
+                {cancelform && (
+                        <div className="fixed flex justify-center items-center z-50 w-full h-1/2 ">
+                            <div className='bg-white p-10 rounded-md flex flex-col border-l-2 border-t-2 border-gray-300 shadow-xl'>
+                                <button className='text-black self-end' onClick={() => setCancelform(false)}> ✗</button>
+                                <div className='text-center w-full'>
+                                    <h1 className='text-black text-center p-2 text-xl font-bold'>Enter your reason</h1>
+                                </div>
+                                <div className='text-center w-full py-4'>
+                                    <input type="text" className='p-2 w-full text-black focus:outline-none bg-gray-300 rounded-md' onChange={(e) => setReason(e.target.value)} />
+                                </div>
+                                <div className='text-center w-full py-4'>
+                                    <button className='bg-black py-2 px-10 w-full rounded-md' onClick={cancelRequest}>Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                 <div className='w-full lg:w-1/2'>
                     <div className='p-5'>
-                        <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}>
+                        <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!}>
                             <GoogleMap
                                 center={center}
                                 zoom={15}
@@ -218,7 +270,6 @@ const page = () => {
                                 options={{ zoomControl: false, streetViewControl: false }}
                             >
                                 <Marker position={center} />
-                                console.log(directionsResponse)
                                 {directionsResponse && (<DirectionsRenderer
                                     directions={directionsResponse}
                                     options={{

@@ -169,7 +169,7 @@ const Page: React.FC = () => {
       if (token) {
         const decodedToken = jwtDecode<DecodedToken>(token);
         const email = decodedToken.sub;
-        await httpClient.post('auth/driveaccept', { email });
+        await httpClient.post('auth/driveaccept', { 'email':email });
         await httpClient.post('booking/acceptbydriver', { user_id: userid, driver_id: driverid });
 
         const ridedata = {
@@ -184,7 +184,7 @@ const Page: React.FC = () => {
         };
         await httpClient.post('ride/createride', ridedata);
         setShowNotification(false);
-        router.push(`/drive_accepted`);
+        router.push('/drive_accepted');
       }
     } catch (error) {
       console.error('Error accepting ride:', error);
