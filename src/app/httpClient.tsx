@@ -2,7 +2,10 @@ import axios from 'axios';
 
 const httpClient = axios.create({
     baseURL: 'http://localhost:9637',
-    withCredentials: true
+    withCredentials: true,
+    headers: {
+        'Content-Type': 'application/json',
+      },
 });
 
 httpClient.interceptors.request.use(

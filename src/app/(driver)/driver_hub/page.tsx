@@ -163,6 +163,7 @@ const Page: React.FC = () => {
   };
 
   const statuson = async (e: React.FormEvent): Promise<void> => {
+    setSpin(true)
     e.preventDefault();
     try {
       const token = localStorage.getItem('daccessToken');
@@ -189,6 +190,9 @@ const Page: React.FC = () => {
     } catch (error) {
       console.error('Error accepting ride:', error);
     }
+    finally{
+      setSpin(false)
+    }
   };
 
   return (
@@ -212,6 +216,10 @@ const Page: React.FC = () => {
             </div>
           </div>
         )}
+        {spin && 
+      <div className='fixed z-10 bg-black bg-opacity-0 w-full h-3/4 flex justify-center items-center'>
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>}
         {showNotification && (
           <div className="fixed flex justify-center items-center z-50 w-full">
             <div className="bg-secondary border-2 border-violet-800 shadow-lg rounded-lg p-4 w-fit">

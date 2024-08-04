@@ -20,7 +20,7 @@ const page = () => {
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!,
-        libraries: ['places', 'maps']
+        libraries: ['places']
     });
 
     useEffect(() => {
@@ -48,21 +48,26 @@ const page = () => {
     useEffect(() => {
         const fetchDirections = () => {
             try {
-                const directionsService = new window.google.maps.DirectionsService();
-                directionsService.route(
-                    {
-                        origin: pickup,
-                        destination: destination,
-                        travelMode: window.google.maps.TravelMode.DRIVING,
-                    },
-                    (result, status) => {
-                        if (status === window.google.maps.DirectionsStatus.OK) {
-                            setDirectionsResponse(result);
-                        } else {
-                            console.error(`error fetching directions ${result}`);
+                if (isLoaded) {
+
+                    const directionsService = new window.google.maps.DirectionsService();
+                    directionsService.route(
+                        {
+                            origin: pickup,
+                            destination: destination,
+                            travelMode: window.google.maps.TravelMode.DRIVING,
+                        },
+                        (result, status) => {
+                            if (status === window.google.maps.DirectionsStatus.OK) {
+                                setDirectionsResponse(result);
+                            } else {
+                                console.error(`error fetching directions ${result}`);
+                            }
                         }
-                    }
-                );
+                    );
+                } else {
+                    console.error(`error fetching directions ${status}`);
+                }
 
             } catch {
 
@@ -71,7 +76,7 @@ const page = () => {
         };
 
         fetchDirections();
-    }, [currentLocation, pickup]);
+    }, [destination, pickup, isLoaded]);
 
     useEffect(() => {
 
@@ -104,18 +109,33 @@ const page = () => {
         return () => clearInterval(intervalId);
     }, []);
 
-    const reached = async() =>{
+    const reached = async () => {
+
+        const response3 = await httpClient.post('ride/getpayment', { 'rideid': rideid })
+        if (response3.data['message'] === 'ok') {
+            navigate.push('/payment_not_done')
+            return
+        }
+
         const token = localStorage.getItem('daccessToken');
         if (token) {
             const decodedToken = jwtDecode(token);
             const email = decodedToken.sub;
-            const response = await httpClient.post('ride/ridefinish',{'email':email})
-            const response2 = await httpClient.post('booking/ridefinish',{'email':email})
-            if (response.data['message'] === 'ok'){
+            const response = await httpClient.post('ride/ridefinish', { 'email': email, 'rideid': rideid })
+            const response2 = await httpClient.post('booking/ridefinish', { 'email': email, 'rideid': rideid })
+            if (response.data['message'] === 'ok') {
                 navigate.push('/driver_hub')
             }
         }
     }
+
+    // if (!isLoaded) {
+    //     return (
+    //         <div className='bg-white w-full h-screen flex justify-center items-center'>
+    //             <span className="loading loading-spinner loading-lg"></span>
+    //         </div>
+    //     );
+    // }
     return (
         <div className='bg-white h-screen'>
             <div className='bg-secondary'>
@@ -123,7 +143,7 @@ const page = () => {
             </div>
             <div className='w-full bg-white '>
                 <div className='p-10 flex justify-center'>
-                    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!}>
+                    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!} libraries={['places']}>
                         <GoogleMap
                             center={center}
                             zoom={15}
@@ -143,7 +163,8 @@ const page = () => {
                             />
                             )}
 
-                        </GoogleMap></LoadScript>
+                        </GoogleMap>
+                    </LoadScript>
                 </div>
                 <div className='w-full flex justify-center'>
                     <div className='w-1/3 text-center'>

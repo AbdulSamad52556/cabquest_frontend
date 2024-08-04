@@ -22,13 +22,13 @@ interface Notification {
   status: string;
 }
 type LocationState = {
-  latitude: number | null;
-  longitude: number | null;
+  lat: number | null;
+  lon: number | null;
 };
 
 const Notification: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([])
-  const [location, setLocation] = useState<LocationState>({ latitude: null, longitude: null });
+  const [location, setLocation] = useState<LocationState>({ lat: null, lon: null });
   const [spin, setSpin] = useState<boolean>(true)
   const [alert, setAlert] = useState<string>('')
   const [driverEmail, setDriverEmail] = useState<string>('')
@@ -71,8 +71,8 @@ const Notification: React.FC = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
           });
           setError(null);
         },
@@ -141,6 +141,7 @@ const Notification: React.FC = () => {
 
   const statusOn = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSpin(true)
     try {
       const token = localStorage.getItem('daccessToken');
       if (token) {
@@ -161,9 +162,12 @@ const Notification: React.FC = () => {
         };
         console.log(ridedata)
         await httpClient.post('ride/createride', ridedata);
+        setAlert('alerted again')
+        setSpin(false)
         navigate.push(`/drive_accepted?userid=${userId}&driverid=${driverid}`);
       }
     } catch (error) {
+      setSpin(false)
       console.error('Error accepting ride:', error);
     }
 

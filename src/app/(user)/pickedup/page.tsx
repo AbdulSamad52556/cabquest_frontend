@@ -1,18 +1,18 @@
 'use client'
 import Header2 from '@/component/user/header2/header2'
-import React, { useEffect, useReducer, useState } from 'react'
-import { PhoneIcon, ChartBarIcon, ChatIcon, ArrowCircleDownIcon } from '@heroicons/react/solid';
-import { LoadScript, DistanceMatrixService, GoogleMap, Marker, useJsApiLoader, Polyline, DirectionsService, Autocomplete, DirectionsRenderer } from '@react-google-maps/api';
+import React, { useEffect, useState } from 'react'
+import { PhoneIcon, ChatIcon } from '@heroicons/react/solid';
+import { LoadScript, GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api';
 import { jwtDecode } from 'jwt-decode';
 import httpClient from '@/app/httpClient';
 import { useRouter } from 'next/navigation'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Payment from '../../../component/razorpay/payment'
 
 interface DecodedToken {
     sub: string;
 }
-
 
 const page = () => {
     const [center, setCenter] = useState({ lat: 0, lng: 0 });
@@ -27,12 +27,10 @@ const page = () => {
     const navigate = useRouter()
     const [reason, setReason] = useState('')
     const [cancelform, setCancelform] = useState<boolean>(false);
+    const [fromride, setfromride] = useState(true)
     const [phone, setPhone] = useState('')
-    // const { isLoaded } = useJsApiLoader({
-    //     id: 'google-map-script',
-    //     googleMapsApiKey: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!,
-    //     libraries: ['maps', 'places'],
-    // });
+    const [rideid, setRideid] = useState<Number>(0)
+    const [payment, setPayment] = useState<String>('')
 
     useEffect(() => {
         const fetchDirections = () => {
@@ -53,15 +51,11 @@ const page = () => {
                         }
                     }
                 );
-
             } catch {
-
             }
-
         };
         const intervalId = setInterval(fetchDirections, 1000);
         return () => clearInterval(intervalId);
-        // fetchDirections();
     }, [currentLocation, pick_up_location]);
 
     useEffect(() => {
@@ -80,6 +74,8 @@ const page = () => {
                 setCenter({ lat: parseFloat(response.data['ride']['live']['lat']), lng: parseFloat(response.data['ride']['live']['lng']) });
                 setIsfetch(false)
                 setPhone(response.data['ride']['phone'])
+                setRideid(response.data['ride']['ride_id'])
+                setPayment(response.data['ride']['payment_status'])
             }
         }
         getrideuser();
@@ -109,23 +105,23 @@ const page = () => {
     const handleClick = () => {
         window.location.href = `tel:${phone}`;
     };
-    const cancelRequest = async() =>{
+    const cancelRequest = async () => {
         const token = localStorage.getItem('accessToken');
         const rideid = localStorage.getItem('rideid')
         if (token) {
             const decodedToken = jwtDecode<DecodedToken>(token);
             const email = decodedToken.sub
-            const response = await httpClient.post('ride/cancelfromuser',{'rideid':rideid,'reason':reason})
-            const response2 = await httpClient.post('booking/cancelfromuser',{'email':email, 'reason':reason})
-            const response3 = await httpClient.post('auth/makeactive2',{'driverid':response2.data['driverid']})
-            if( response.data['message'] === 'ok' && response2.data['message'] === 'ok' && response3.data['message'] === 'ok'){
-                toast('Your ride is cancelled',{type:'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
-                setTimeout(()=>{
-                    navigate.push('/ride')
-                },1500);
+            const response = await httpClient.post('ride/cancelfromuser', { 'rideid': rideid, 'reason': reason })
+            const response2 = await httpClient.post('booking/cancelfromuser', { 'email': email, 'reason': reason })
+            const response3 = await httpClient.post('auth/makeactive2', { 'driverid': response2.data['driverid'] })
+            if (response.data['message'] === 'ok' && response2.data['message'] === 'ok' && response3.data['message'] === 'ok') {
+                toast('Your ride is cancelled', { type: 'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+                setTimeout(() => {
+                    navigate.push('/')
+                }, 1500);
             }
-            else{
-                toast('something error',{type:'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+            else {
+                toast('something error', { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
             }
         }
     }
@@ -138,7 +134,7 @@ const page = () => {
             <div className='w-full flex bg-white flex-col lg:flex-row'>
                 <div className='w-full lg:w-1/2 flex justify-center items-center p-5'>
 
-                    <ToastContainer/>
+                    <ToastContainer />
 
                     {isfetch ? (
                         <div className="border-2 w-full lg:w-1/2 border-gray-300 p-2 rounded-lg">
@@ -216,7 +212,7 @@ const page = () => {
                                             </tr>
                                             <tr>
                                                 <th className='text-left py-2'>Payment</th>
-                                                <td className='text-left py-2'>Pending</td>
+                                                <td className='text-left py-2'>{payment}</td>
                                             </tr>
                                             <tr>
                                                 <th className='text-left py-2'>Rate</th>
@@ -225,6 +221,7 @@ const page = () => {
                                         </tbody>
                                     </table>
                                 </div>
+                                <Payment price={parseInt(fare,10)} fromride={fromride} rideid={rideid}/>
                                 <div className='flex flex-col justify-around space-y-2'>
                                     <button className='bg-black hover:bg-gray-800 transition duration-300 py-2 px-6 rounded-md flex justify-center items-center' onClick={handleClick}>
                                         <PhoneIcon className="h-5 w-5 text-gray-200 mr-2" />
@@ -234,7 +231,7 @@ const page = () => {
                                         <ChatIcon className="h-5 w-5 text-gray-200 mr-2" />
                                         <span className="text-white">Chat</span>
                                     </button>
-                                    <button className='bg-red-600 hover:bg-red-500 transition duration-300 py-2 px-6 text-sm text-white rounded-md' onClick={()=>{setCancelform(true)}}>
+                                    <button className='bg-red-600 hover:bg-red-500 transition duration-300 py-2 px-6 text-sm text-white rounded-md' onClick={() => { setCancelform(true) }}>
                                         Cancel
                                     </button>
                                 </div>
@@ -244,25 +241,25 @@ const page = () => {
                         )}
                 </div>
                 {cancelform && (
-                        <div className="fixed flex justify-center items-center z-50 w-full h-1/2 ">
-                            <div className='bg-white p-10 rounded-md flex flex-col border-l-2 border-t-2 border-gray-300 shadow-xl'>
-                                <button className='text-black self-end' onClick={() => setCancelform(false)}> ✗</button>
-                                <div className='text-center w-full'>
-                                    <h1 className='text-black text-center p-2 text-xl font-bold'>Enter your reason</h1>
-                                </div>
-                                <div className='text-center w-full py-4'>
-                                    <input type="text" className='p-2 w-full text-black focus:outline-none bg-gray-300 rounded-md' onChange={(e) => setReason(e.target.value)} />
-                                </div>
-                                <div className='text-center w-full py-4'>
-                                    <button className='bg-black py-2 px-10 w-full rounded-md' onClick={cancelRequest}>Submit</button>
-                                </div>
+                    <div className="fixed flex justify-center items-center z-50 w-full h-1/2 ">
+                        <div className='bg-white p-10 rounded-md flex flex-col border-l-2 border-t-2 border-gray-300 shadow-xl'>
+                            <button className='text-black self-end' onClick={() => setCancelform(false)}> ✗</button>
+                            <div className='text-center w-full'>
+                                <h1 className='text-black text-center p-2 text-xl font-bold'>Enter your reason</h1>
+                            </div>
+                            <div className='text-center w-full py-4'>
+                                <input type="text" className='p-2 w-full text-black focus:outline-none bg-gray-300 rounded-md' onChange={(e) => setReason(e.target.value)} />
+                            </div>
+                            <div className='text-center w-full py-4'>
+                                <button className='bg-black py-2 px-10 w-full rounded-md' onClick={cancelRequest}>Submit</button>
                             </div>
                         </div>
-                    )}
+                    </div>
+                )}
 
                 <div className='w-full lg:w-1/2'>
                     <div className='p-5'>
-                        <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!}>
+                        <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!} libraries={['places']}>
                             <GoogleMap
                                 center={center}
                                 zoom={15}

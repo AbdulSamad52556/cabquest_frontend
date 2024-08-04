@@ -19,13 +19,13 @@ const page = () => {
             const userid = searchParams.get('userid')
             const driverid = searchParams.get('driverid')
             const response = await httpClient.post('ride/checkride',{'userid':userid})
+            const response2 = await httpClient.post('booking/checknodriver',{'userid':userid})
             console.log(response.data['message'])
             if (response.data['message'] === 'ridestarted'){
                 localStorage.setItem('rideid',response.data['rideid'])
                 navigate.push('/pickedup')
             }
-            const response2 = await httpClient.post('booking/checknodriver',{'userid':userid})
-            if (response2.data['message'] === 'request is not accepted'){
+            else if (response2.data['message'] === 'request is not accepted'){
                 navigate.push('/driver_not_available')
             }
         }

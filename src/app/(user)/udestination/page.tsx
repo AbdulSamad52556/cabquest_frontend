@@ -4,7 +4,9 @@ import React, { useEffect, useState } from 'react'
 import { LoadScript, GoogleMap, Marker, useJsApiLoader, DirectionsRenderer } from '@react-google-maps/api';
 import httpClient from '@/app/httpClient';
 import { jwtDecode } from 'jwt-decode';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';    
+import Payment from '@/component/razorpay/payment';
+
 
 const page = () => {
     const [price, setPrice] = useState('')
@@ -13,7 +15,7 @@ const page = () => {
     const [pickupkm, setPickupkm] = useState(0)
     const [totalkm, setTotalkm] = useState(0)
     const [isLoading, setIsLoading] = useState(true);
-    const [directionsResponse, setDirectionsResponse] = useState(null);
+    const [directionsResponse, setDirectionsResponse] = useState<google.maps.DirectionsResult | null>(null);
     const [currentLocation, setCurrentlocation] = useState('')
     const [rideid, setRideid] = useState(0)
     const [update, setgetupdate] = useState('')
@@ -22,6 +24,7 @@ const page = () => {
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!,
+        libraries:['places']
     });
 
 
@@ -74,14 +77,17 @@ const page = () => {
     useEffect(() => {
         const getlive = async () => {
             const token = localStorage.getItem('accessToken');
+            const rideid2 = localStorage.getItem('rideid')
+            setRideid(parseInt(rideid2!, 10))
             if (token) {
                 const decodedToken = jwtDecode(token);
                 const email = decodedToken.sub
                 const response = await httpClient.post('ride/getlive', { 'email': email })
                 const driverLocation = { lat: response.data['latitude'], lng: response.data['longitude'] }
                 setCenter({ lat: response.data['latitude'], lng: response.data['longitude'] })
-                const ridefinish = await httpClient.post('ride/isridefinish',{'email':email})
+                const ridefinish = await httpClient.post('ride/isridefinish',{'email':email,'rideid':rideid})
                 if (ridefinish.data['message'] === 'trip completed'){
+                    localStorage.removeItem('rideid')
                     navigate.push('/')
 
                 }
@@ -98,8 +104,8 @@ const page = () => {
                 <Header2 />
             </div>
             <div className='w-full bg-white'>
-                <div className='p-10 flex justify-center'>
-                    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY}>
+                <div className='p-10 flex flex-col items-center justify-center'>
+                    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY} libraries={['places']}>
                         <GoogleMap
                             center={center}
                             zoom={15}
@@ -120,14 +126,11 @@ const page = () => {
                             )}
                         </GoogleMap>
                     </LoadScript>
+                    <div className='w-2/3'>
+                    {rideid &&
+                    <Payment price={parseInt(price, 10)} rideid={rideid} fromride={false}/>}
                 </div>
-                {/* <div className='w-full flex justify-center'>
-                    <div className='w-1/3 text-center'>
-                        <div className='p-2 bg-black rounded-lg hover:bg-gray-800 transition duration-300'>
-                            <button className='text-white font-semibold px-2'>Reached</button>
-                        </div>
-                    </div>
-                </div> */}
+                </div>
             </div>
         </div>
     )

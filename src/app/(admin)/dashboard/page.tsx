@@ -254,9 +254,6 @@ const Page: React.FC = () => {
                         </BarChart>
                     </ResponsiveContainer>
 
-                    <div>
-                        <h1>hello</h1>
-                    </div>
                 </div>
                 </div>
 
