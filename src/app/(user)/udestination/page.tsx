@@ -72,7 +72,7 @@ const page = () => {
         };
         fetchDirections();
 
-    }, [currentLocation, pickup]);
+    }, [currentLocation, pickup,destination]);
 
     useEffect(() => {
         const getlive = async () => {
@@ -85,7 +85,7 @@ const page = () => {
                 const response = await httpClient.post('ride/getlive', { 'email': email })
                 const driverLocation = { lat: response.data['latitude'], lng: response.data['longitude'] }
                 setCenter({ lat: response.data['latitude'], lng: response.data['longitude'] })
-                const ridefinish = await httpClient.post('ride/isridefinish',{'email':email,'rideid':rideid})
+                const ridefinish = await httpClient.post('ride/isridefinish',{'email':email,'rideid':rideid2})
                 if (ridefinish.data['message'] === 'trip completed'){
                     localStorage.removeItem('rideid')
                     navigate.push('/')

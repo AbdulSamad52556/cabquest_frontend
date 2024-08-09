@@ -118,7 +118,7 @@ const Sidenav = () => {
                                 </button>}
                             </div>
 
-                            <div className='w-full'>
+                            {/* <div className='w-full'>
                                 {numb[5] ? <button className="flex items-center px-3 py-4 w-full text-gray-900 transition-colors duration-300 transform rounded-lg dark:hover:bg-gray-200 hover:text-gray-700 bg-gray-200" onClick={() => setCurrent('/reports_')} >
                                     <Image src={report} alt='' />
                                     <span className="mx-2 text-sm font-medium">Reports</span>
@@ -126,7 +126,7 @@ const Sidenav = () => {
                                     <Image src={report} alt='' />
                                     <span className="mx-2 text-sm font-medium">Reports</span>
                                 </button>}
-                            </div>
+                            </div> */}
 
                             <div className='w-full'>
                                 {numb[6] ? <button className="flex items-center px-3 py-4 w-full text-gray-900 transition-colors duration-300 transform rounded-lg dark:hover:bg-gray-200 hover:text-gray-700 bg-gray-200" onClick={() => setCurrent('/driver_kyc')} >

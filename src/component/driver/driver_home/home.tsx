@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Chart, ArcElement } from 'chart.js'
 Chart.register(ArcElement);
+
 import image from '../../../../public/static/out-0.webp'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -25,13 +26,27 @@ type DecodedToken = {
 };
 
 const Home: React.FC<HomeProps> = ({ getlocation }) => {
-  const percentage = 55; // example percentage
-  const amount = 1545;
+  
   const [location, setLocation] = useState<LocationState>({ latitude: null, longitude: null });
   const [error, setError] = useState<string | null>(null);
   const [isActive, setActive] = useState<boolean>(false)
   const [spin, setSpin] = useState(false)
   const navigate = useRouter();
+  const [total, setTotal] = useState(0)
+
+  useEffect(() => {
+    const weeklyearnings = async () => {
+        const token = localStorage.getItem('daccessToken');
+        if (token) {
+            const decodedToken = jwtDecode(token);
+            const email = decodedToken.sub;
+            const response = await httpClient.post('ride/weeklyearnings', { 'email': email })
+            setTotal(response.data['message'])
+          
+        }
+    }
+    weeklyearnings();
+}, [])
 
   useEffect(() => {
     if (localStorage.getItem('isactive')) {
@@ -135,8 +150,8 @@ const Home: React.FC<HomeProps> = ({ getlocation }) => {
             </div>
             <div className='p-5 w-60'>
               <CircularProgressbar
-                value={percentage}
-                text={`$ ${amount}`}
+                value={(total*100)/2000}
+                text={`₹ ${total}`}
                 styles={buildStyles({
                   textColor: '#fff',
                   pathColor: '#1A1B71',

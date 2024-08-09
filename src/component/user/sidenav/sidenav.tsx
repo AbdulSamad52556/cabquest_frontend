@@ -4,6 +4,7 @@ import { ArrowCircleDownIcon, LocationMarkerIcon } from '@heroicons/react/solid'
 import Image from 'next/image';
 import image from '../../../../public/static/navigation.png';
 import image2 from '../../../../public/static/Eclipse@1x-1.0s-200px-200px (2).gif';
+import { useJsApiLoader } from '@react-google-maps/api';
 
 interface SidenavProps {
   onButtonClick: () => void;
@@ -23,6 +24,12 @@ const Sidenav: React.FC<SidenavProps> = ({ onButtonClick, Autocomplete, result, 
   const originRef = useRef<HTMLInputElement>(null);
   const destinationRef = useRef<HTMLInputElement>(null);
 
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!,
+    libraries: ['places']
+  });
+  
   const onLoad = (autocompleteInstance: google.maps.places.Autocomplete) => {
     setAutocomplete(autocompleteInstance);
   };

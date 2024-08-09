@@ -141,17 +141,6 @@ const page = () => {
         return () => clearInterval(intervalId);
     }, []);
 
-    // const getLocationName = async (lat: any, lng: any) => {
-    //     const apiKey = process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY;
-    //     const response = await axios.get(
-    //         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
-    //     );
-    //     if (response.data.results && response.data.results.length > 0) {
-    //         return response.data.results[0].formatted_address;
-    //     } else {
-    //         return 'Location name not found';
-    //     }
-    // };
     const transformCoordinates = (coord: Coordinates): { lat: number | null; lng: number | null } => {
         return {
             lat: coord.latitude !== null && coord.latitude !== undefined

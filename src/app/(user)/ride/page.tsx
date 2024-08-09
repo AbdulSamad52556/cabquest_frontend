@@ -252,18 +252,20 @@ const Page: React.FC = () => {
       </div>
     );
   }
-  // if (!isLoaded) {
-  //   return (
-  //     <div className='bg-white w-full h-screen flex justify-center items-center'>
-  //       <span className="loading loading-spinner loading-lg"></span>
-  //     </div>
-  //   );
-  // }
+
+  if (!isLoaded) {
+    return (
+      <div className='bg-white w-full h-screen flex justify-center items-center'>
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
+  }
 
   // if (loadError) {
   //   console.error("Error loading Google Maps:", loadError);
   //   return <div>Error loading Google Maps.</div>;
   // }
+
   const createOrder = async () => {
     try {
       const res = await fetch('/api/checkout', { method: 'POST' });
@@ -298,7 +300,7 @@ const Page: React.FC = () => {
         </div>
         
         <div className='xs:w-full sm:w-full md:w-3/5 xs:p-10 sm:p-10 md:p-0 mb-2'>
-
+        {/* <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!} libraries={['places']}> */}
             <GoogleMap
               center={userLocation || { lat: 0, lng: 0 }} 
               zoom={15}

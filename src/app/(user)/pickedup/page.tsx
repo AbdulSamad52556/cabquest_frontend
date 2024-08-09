@@ -2,7 +2,7 @@
 import Header2 from '@/component/user/header2/header2'
 import React, { useEffect, useState } from 'react'
 import { PhoneIcon, ChatIcon } from '@heroicons/react/solid';
-import { LoadScript, GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api';
+import { LoadScript, GoogleMap, Marker, DirectionsRenderer, useJsApiLoader } from '@react-google-maps/api';
 import { jwtDecode } from 'jwt-decode';
 import httpClient from '@/app/httpClient';
 import { useRouter } from 'next/navigation'
@@ -31,10 +31,17 @@ const page = () => {
     const [phone, setPhone] = useState('')
     const [rideid, setRideid] = useState<Number>(0)
     const [payment, setPayment] = useState<String>('')
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!,
+        libraries: ['places']
+    });
 
     useEffect(() => {
         const fetchDirections = () => {
             try {
+                if (isLoaded){
+
                 const directionsService = new window.google.maps.DirectionsService();
 
                 directionsService.route(
@@ -51,12 +58,14 @@ const page = () => {
                         }
                     }
                 );
+            }
+
             } catch {
             }
         };
         const intervalId = setInterval(fetchDirections, 1000);
         return () => clearInterval(intervalId);
-    }, [currentLocation, pick_up_location]);
+    }, [currentLocation, pick_up_location, isLoaded]);
 
     useEffect(() => {
         const getrideuser = async () => {
@@ -80,7 +89,7 @@ const page = () => {
         }
         getrideuser();
 
-    }, [])
+    }, [isLoaded])
 
     useEffect(() => {
         const driverarrived = async () => {
