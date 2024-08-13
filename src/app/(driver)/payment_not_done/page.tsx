@@ -54,7 +54,7 @@ const Page = () => {
   useEffect(()=>{
     const intervalId = setInterval(ispayed, 1000);
     return () => clearInterval(intervalId);
-  },[])
+  },[ispayed])
 
   return (
     <div className='bg-black h-screen'>

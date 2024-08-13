@@ -31,7 +31,7 @@ const Page = () => {
     catch {
       router.push('/login_driver');
     }
-  }, [])
+  }, [router])
 
   if (!spin) {
     return (

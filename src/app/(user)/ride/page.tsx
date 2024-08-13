@@ -102,7 +102,7 @@ const Page: React.FC = () => {
     else{
       getLocation();
     }
-  }, [isFormVisible, vehicles, alert, isLoaded]);
+  }, [isFormVisible, vehicles, alert, isLoaded, router]);
 
   useEffect(() => {
     const socket = socketIOClient('http://localhost:9638');

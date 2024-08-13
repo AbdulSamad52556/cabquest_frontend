@@ -21,7 +21,7 @@ const Page = () => {
     }catch{
 
     }
-  },[])
+  },[navigate])
 
   if (!spin) {
     return (

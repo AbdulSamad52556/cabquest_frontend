@@ -67,7 +67,7 @@ const DriverChat = () => {
     const cleanupSocket = initializeSocket(rideid);
     return cleanupSocket;
 
-  }, [room]);
+  }, [room, rideid]);
 
  
 

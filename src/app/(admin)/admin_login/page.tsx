@@ -24,7 +24,7 @@ const Page = () => {
         else {
             setLoading(true)
         }
-    }, [])
+    }, [navigate])
 
 
     const handleSubmit = async (e: { preventDefault: () => void }) => {

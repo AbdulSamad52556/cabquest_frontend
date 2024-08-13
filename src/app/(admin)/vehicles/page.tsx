@@ -28,7 +28,7 @@ const Page: React.FC = () => {
         if (!isFormVisible) {
             setFetchve(!fetchve)
         }
-    }, [isFormVisible])
+    }, [isFormVisible, fetchve])
 
 
     useEffect(() => {
@@ -59,7 +59,7 @@ const Page: React.FC = () => {
         } catch {
 
         }
-    }, [])
+    }, [navigate])
 
     const addVehicle = () => {
         setIsFormVisible(!isFormVisible)

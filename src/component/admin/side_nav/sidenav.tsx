@@ -38,7 +38,7 @@ const Sidenav = () => {
             }
             
         }
-    }, [current])
+    }, [current, navigate, pat])
 
 
     const logOut = () => {

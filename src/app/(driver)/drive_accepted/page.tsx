@@ -284,7 +284,7 @@ const Page = () => {
         }
         const intervalId = setInterval(checkusercancelled, 2000);
         return () => clearInterval(intervalId);
-    }, [])
+    }, [navigate])
 
     // if (!isLoaded) {
     //     return (

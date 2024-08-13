@@ -6,6 +6,7 @@ import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 're
 import { ToastContainer, toast } from 'react-toastify';
 import Webcam from 'react-webcam';
 import 'react-toastify/dist/ReactToastify.css';
+import Image from 'next/image';
 
 interface Vehicle {
   id: number;
@@ -254,7 +255,7 @@ const VehicleBody = () => {
             <button onClick={handleOpenCamera} className='bg-secondary-dark text-white px-20 py-2 rounded-md'>Upload Photo</button>}
           {image && (
             <div className='bg-gray-600 rounded-lg text-white p-2 flex'>
-              <img src={image} alt="Captured" className='rounded-lg' />
+              <Image src={image} alt="Captured" className='rounded-lg' />
             </div>
           )}
           {isCameraOpen && (

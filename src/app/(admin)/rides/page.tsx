@@ -35,7 +35,7 @@ const Page = () => {
     } catch {
 
     }
-  }, [])
+  }, [navigate])
 
   useEffect(() => {
     const fetchride = async () => {
@@ -83,7 +83,7 @@ const Page = () => {
             <tbody>
             {Array.isArray(rides) &&
               rides.map((ride, index) => (
-                <tr className="border-b text-gray-800 border-gray-200 text-center text-sm">
+                <tr key={index} className="border-b text-gray-800 border-gray-200 text-center text-sm">
                   <td className="py-3 px-4">{ride.id}</td>
                   <td className="py-3 px-4">{ride.userid}</td>
                   <td className="py-3 px-4">{ride.driverid}</td>

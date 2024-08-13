@@ -44,7 +44,7 @@ const Page = () => {
             }
           }
           isVehicleadded();
-    },[])
+    },[navigate])
 
     if (!spin) {
         return (

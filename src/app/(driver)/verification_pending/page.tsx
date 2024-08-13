@@ -34,8 +34,7 @@ const Page = () => {
       }
     }, 3000);
     
-    
-  },[])
+  },[isverified])
 
   if (!spin) {
     return (

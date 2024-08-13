@@ -62,7 +62,7 @@ const Page: React.FC = () => {
             }
         }
         weeklyearnings();
-    }, [])
+    }, [navigate])
 
     return (
         <div className='bg-secondary min-h-screen'>

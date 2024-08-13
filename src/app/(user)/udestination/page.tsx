@@ -96,7 +96,7 @@ const Page = () => {
         }
         const intervalId = setInterval(getlive, 1000);
         return () => clearInterval(intervalId);
-    }, [])
+    }, [navigate])
 
     return (
         <div className='bg-white h-screen'>

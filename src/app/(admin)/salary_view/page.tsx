@@ -33,7 +33,7 @@ const Page: React.FC = () => {
             setDrivers(response.data)
         }
         getdata();
-    }, [alert])
+    }, [alert, searchParams])
 
     const sendsalary = async (e: React.MouseEvent<HTMLAnchorElement>, id: any, date: Date, fare: any) => {
         e.preventDefault()

@@ -33,7 +33,7 @@ const Page = () => {
             setSpin(true)
 
         }
-    },[])
+    },[navigate])
 
     const handleSubmit = async (e: { preventDefault: () => void }) => {
         isLoading(true)

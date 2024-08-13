@@ -108,7 +108,7 @@ const Page = () => {
         }
         const intervalId = setInterval(driverarrived, 1000);
         return () => clearInterval(intervalId);
-    }, [])
+    }, [navigate])
 
     const handleClick = () => {
         window.location.href = `tel:${phone}`;

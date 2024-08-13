@@ -33,7 +33,7 @@ const Page :  React.FC = ()=> {
             }
         }
         gettripuser();
-    }, [])
+    }, [navigate])
 
 
     return (

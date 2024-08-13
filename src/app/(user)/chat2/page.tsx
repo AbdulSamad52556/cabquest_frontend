@@ -70,7 +70,7 @@ const UserChat = () => {
     const cleanupSocket = initializeSocket(rideid);
     return cleanupSocket;
 
-  }, [room]);
+  }, [room, rideid]);
 
 
   const sendMessage = () => {
