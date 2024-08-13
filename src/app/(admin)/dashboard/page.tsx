@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Toaster, toast } from 'sonner'
 import { Chart as ChartJS, Title, BarElement, LineElement, CategoryScale, LinearScale } from 'chart.js';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'; // Verify if GoogleMap is available here
 import httpClient from '@/app/httpClient'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
