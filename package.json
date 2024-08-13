@@ -46,6 +46,7 @@
     "recharts": "^2.12.7",
     "semantic-ui-css": "^2.5.0",
     "semantic-ui-react": "^2.1.5",
+    "sharp": "^0.33.4",
     "socket.io-client": "^4.7.5",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.3.0",
