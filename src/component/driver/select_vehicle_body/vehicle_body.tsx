@@ -16,33 +16,31 @@ interface Vehicle {
   price_per_KM: string;
 }
 
-const VehicleBody = () => {
+const VehicleBody: React.FC = () => {
 
   const [files, setFiles] = useState<Map<number, File>>(new Map());
   const [selectedIndex, setSelectedIndex] = useState<string | null>(null);
-  const [names, setNames] = useState([]);
-  const webcamRef = useRef(null);
-  const [image, setImage] = useState(null);
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const [model, setModel] = useState('')
-  const [year, setYear] = useState('')
-  const [plate, setPlate] = useState('')
-  const [loading, setLoading] = useState(true);
+  const [names, setNames] = useState<string[]>([]);
+  const webcamRef = useRef<Webcam>(null);
+  const [image, setImage] = useState<string | null>(null);
+  const [isCameraOpen, setIsCameraOpen] = useState<boolean>(false);
+  const [model, setModel] = useState<string>('');
+  const [year, setYear] = useState<string>('');
+  const [plate, setPlate] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useRouter();
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
+  useEffect(() => {
     try {
-
       const token = localStorage.getItem('daccessToken');
-      if (!token){
-      navigate.push('/login_driver')
-
+      if (!token) {
+        navigate.push('/login_driver');
       }
     } catch {
-      navigate.push('/login_driver')
+      navigate.push('/login_driver');
     }
-
-    
+  }, [navigate]);
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -66,27 +64,27 @@ const VehicleBody = () => {
   }, []);
 
 
-  const getemail = () =>{
+  const getemail = (): string => {
     const token = localStorage.getItem('daccessToken');
-
-    console.log('tokens: ',token)
-    const decodedToken = jwtDecode(token);
-    const email = decodedToken.sub;
-    return email
+    if (!token) return '';
+    const decodedToken = jwtDecode<{ sub: string }>(token);
+    return decodedToken.sub;
   }
 
-
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>, index: number): void => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       setFiles((prevFiles) => new Map(prevFiles.set(index, file)));
     }
   };
-  const capture = useCallback(() => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    setImage(imageSrc);
-    setIsCameraOpen(false)
-    console.log(imageSrc)
+
+  const capture = useCallback((): void => {
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      setImage(imageSrc);
+      setIsCameraOpen(false);
+      console.log(imageSrc);
+    }
   }, [webcamRef]);
 
   const handleOpenCamera = () => {
@@ -98,9 +96,9 @@ const VehicleBody = () => {
     setSelectedIndex(name);
   };
 
-  const submitDoc = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault()
-    
+  const submitDoc = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+
     const email = getemail();
 
     const data = {
@@ -110,15 +108,18 @@ const VehicleBody = () => {
       'plate': plate,
       'email': email
     }
-    const response = await httpClient.post('auth/vehicle', data)
-    if (response.data['message'] === "Successfully added") {
-      toast(response.data['message'], { type: 'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false, })
-      const timer = setTimeout(() => {
-        navigate.push('/verification_pending')
-      }, 1000);
-    }
-    else {
-      toast(response.data['message'], { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false, })
+    try {
+      const response = await httpClient.post('auth/vehicle', data);
+      if (response.data.message === "Successfully added") {
+        toast(response.data.message, { type: 'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+        setTimeout(() => {
+          navigate.push('/verification_pending');
+        }, 1000);
+      } else {
+        toast(response.data.message, { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+      }
+    } catch (error) {
+      console.error("Error submitting data:", error);
     }
   };
 

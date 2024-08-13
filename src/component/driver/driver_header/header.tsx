@@ -10,13 +10,12 @@ import httpClient from '@/app/httpClient'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const Header = () => {
   const navigate = useRouter();
   const signOut = () => {
 
     const token = localStorage.getItem('daccessToken');
-    const decodedToken = jwtDecode(token);
+    const decodedToken = jwtDecode<any>(token || '');
     const email = decodedToken.sub;
     const checknotificationpending = async () => {
       const response = await httpClient.post('booking/checknotificationpending', { 'email': email })
