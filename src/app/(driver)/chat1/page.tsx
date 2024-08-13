@@ -5,20 +5,29 @@ import Header from '@/component/driver/driver_header/header';
 import { jwtDecode } from 'jwt-decode';
 import httpClient from '@/app/httpClient';
 import { ArrowCircleRightIcon } from '@heroicons/react/solid';
-import { setTimeout } from 'timers/promises';
 
 const socket = io('http://localhost:9641');
 
+interface DecodedToken {
+  sub: string;
+}
+
+interface Message {
+  message: string;
+  sender: 'driver' | 'user';
+}
+
+
 const DriverChat = () => {
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState<string>('');
+  const [messages, setMessages] = useState<Message[]>([]);
   const [room, setRoom] = useState<number>(0);
-  const [userid, setUserid] = useState<number>(0)
-  const [driverid, setDriverid] = useState<number>(0)
-  const [rideid, setRideid] = useState<number>(0)
-  const chatContainerRef = useRef(null);
+  const [userid, setUserid] = useState<number>(0);
+  const [driverid, setDriverid] = useState<number>(0);
+  const [rideid, setRideid] = useState<number>(0);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const token = localStorage.getItem('daccessToken');
-  const [name, setName] = useState<string>('')
+  const [name, setName] = useState<string>('');
 
 
   
@@ -85,14 +94,14 @@ const DriverChat = () => {
     }
   }, [messages]);
 
-  const hideScrollbarStyle = {
+  const hideScrollbarStyle: React.CSSProperties = {
     msOverflowStyle: 'none',
     scrollbarWidth: 'none',
   };
 
-  const hideScrollbarWebkitStyle = {
+  const hideScrollbarWebkitStyle: React.CSSProperties = {
     ...hideScrollbarStyle,
-    overflowY: 'scroll',
+    overflowY: 'scroll', 
   };
 
   return (
