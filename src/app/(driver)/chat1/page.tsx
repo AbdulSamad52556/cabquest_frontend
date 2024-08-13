@@ -17,7 +17,6 @@ interface Message {
   sender: 'driver' | 'user';
 }
 
-
 const DriverChat = () => {
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -28,10 +27,6 @@ const DriverChat = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const token = localStorage.getItem('daccessToken');
   const [name, setName] = useState<string>('');
-
-
-  
-
 
   useEffect(() => {
     const token = localStorage.getItem('daccessToken');

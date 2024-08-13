@@ -1,8 +1,6 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
-import Header from '@/component/user/header/header';
-import Header2 from '@/component/user/header2/header2';
 import Image from 'next/image';
 import Link from 'next/link';
 import image from '../../../../public/static/WhatsApp_Image_2024-06-05_at_23.43.42_16f84c9f-removebg-preview.png';
@@ -13,22 +11,27 @@ import { ArrowCircleRightIcon } from '@heroicons/react/solid';
 
 const socket = io('http://localhost:9641');
 
-const UserChat = () => {
-  const chatContainerRef = useRef(null);
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
-  const [room, setRoom] = useState<number>(0);
-  const [userid, setUserid] = useState<number>(0)
-  const [driverid, setDriverid] = useState<number>(0)
-  const [rideid, setRideid] = useState<number>(0)
-  const [name, setName] = useState<string>('')
+interface DecodedToken {
+  sub: string;
+}
 
-  interface DecodedToken {
-    userId: string;
-    username: string;
-    // Add other properties as needed
-  }
-  
+
+interface Message {
+  message: string;
+  sender: 'user' | 'driver';
+}
+
+const UserChat = () => {
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  const [message, setMessage] = useState<string>('');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [room, setRoom] = useState<number>(0);
+  const [userid, setUserid] = useState<number>(0);
+  const [driverid, setDriverid] = useState<number>(0);
+  const [rideid, setRideid] = useState<number>(0);
+  const [name, setName] = useState<string>('');
+
+
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -84,15 +87,15 @@ const UserChat = () => {
     }
   }, [messages]);
 
-  const hideScrollbarStyle = {
-    msOverflowStyle: 'none',  // IE and Edge
-    scrollbarWidth: 'none',  // Firefox
+  const hideScrollbarStyle: React.CSSProperties = {
+    msOverflowStyle: 'none', 
+    scrollbarWidth: 'none', 
   };
 
-  const hideScrollbarWebkitStyle = {
+  const hideScrollbarWebkitStyle: React.CSSProperties = {
     ...hideScrollbarStyle,
     overflowY: 'scroll',
-  };
+  }
 
   return (
     <div className='h-screen bg-primary'>
