@@ -33,13 +33,7 @@ const Page = () => {
 
 }, [])
 
-  const ispayed = async() =>{
-    const response = await httpClient.post('ride/ispayed',{'rideid':rideid})
-    if (response.data['message'] === 'payment done'){
-      navigate.push('/driver_hub')
-      return
-    }
-  }
+  
 
   const paymentconfirm = async() =>{
     const response = await httpClient.post('ride/paymentconfirm', {'rideid':rideid})
@@ -52,9 +46,16 @@ const Page = () => {
   }
 
   useEffect(()=>{
+    const ispayed = async() =>{
+      const response = await httpClient.post('ride/ispayed',{'rideid':rideid})
+      if (response.data['message'] === 'payment done'){
+        navigate.push('/driver_hub')
+        return
+      }
+    }
     const intervalId = setInterval(ispayed, 1000);
     return () => clearInterval(intervalId);
-  },[ispayed])
+  },[navigate])
 
   return (
     <div className='bg-black h-screen'>

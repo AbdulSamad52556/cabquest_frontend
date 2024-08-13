@@ -10,23 +10,24 @@ const Page = () => {
   const navigate = useRouter();
   const [spin, setSpin] = useState(false)
 
-  const isverified = async()=>{
-    const token = localStorage.getItem('daccessToken')
-    const decodedToken = jwtDecode(token!);
-    const email = decodedToken.sub;
-    try{
 
-      const response = await httpClient.post('auth/isdriververified',{'email':email})
-      if(response.data['message'] === 'true'){
-        navigate.push('/driver_hub')
-      }
-    }catch{
-      console.log('none')
-    }
-  }
 
   useEffect(()=>{
     const isdriver = localStorage.getItem('isdriver')
+    const isverified = async()=>{
+      const token = localStorage.getItem('daccessToken')
+      const decodedToken = jwtDecode(token!);
+      const email = decodedToken.sub;
+      try{
+  
+        const response = await httpClient.post('auth/isdriververified',{'email':email})
+        if(response.data['message'] === 'true'){
+          navigate.push('/driver_hub')
+        }
+      }catch{
+        console.log('none')
+      }
+    }
     isverified();
     setTimeout(() => {
       if (isdriver){
@@ -34,7 +35,7 @@ const Page = () => {
       }
     }, 3000);
     
-  },[isverified])
+  },[navigate])
 
   if (!spin) {
     return (
