@@ -1,8 +1,29 @@
-// src/types/react-google-maps-api.d.ts
-import { GoogleMap } from '@react-google-maps/api';
+import { RefObject, ReactNode } from 'react';
 
-// Example of extending a type correctly
 declare module '@react-google-maps/api' {
-  // Add any additional types or extensions here
-  // Avoid using static or other invalid modifiers
+  interface LoadScriptProps extends LoadScriptUrlOptions {
+    children?: ReactNode;
+    id: string;
+    nonce?: string;
+    loadingElement?: ReactNode;
+    onLoad?: () => void;
+    onError?: (error: Error) => void;
+    onUnmount?: () => void;
+    preventGoogleFontsLoading?: boolean;
+  }
+
+  class LoadScriptComponent extends React.Component<LoadScriptProps> {
+    check: RefObject<HTMLDivElement>;
+    state: {
+      loaded: boolean;
+    };
+    cleanupCallback: () => void;
+    componentDidMount(): void;
+    componentDidUpdate(prevProps: LoadScriptProps): void;
+    componentWillUnmount(): void;
+    isCleaningUp: () => Promise<void>;
+    cleanup: () => void;
+    injectScript: () => void;
+    render(): ReactNode;
+  }
 }
