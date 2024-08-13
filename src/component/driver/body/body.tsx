@@ -24,7 +24,7 @@ const Body = () => {
             if (token && fullname) {
                 setFullname(fullname);
                 const decodedToken = jwtDecode(token);
-                setEmail(decodedToken.sub);
+                setEmail(decodedToken.sub || '');
             }
         }
         catch{
