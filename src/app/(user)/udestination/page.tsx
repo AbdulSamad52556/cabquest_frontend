@@ -1,37 +1,38 @@
 'use client'
-import Header2 from '@/component/user/header2/header2'
 import React, { useEffect, useState } from 'react'
-import { LoadScript, GoogleMap, Marker, useJsApiLoader, DirectionsRenderer } from '@react-google-maps/api';
+import { LoadScript, GoogleMap, Marker, DirectionsRenderer, useJsApiLoader } from '@react-google-maps/api';
 import httpClient from '@/app/httpClient';
 import { jwtDecode } from 'jwt-decode';
-import { useRouter } from 'next/navigation';    
+import { useRouter } from 'next/navigation';
 import Payment from '@/component/razorpay/payment';
+import Header2 from '@/component/user/header2/header2'
 
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY || '';
 
-const Page = () => {
-    const [price, setPrice] = useState('')
-    const [center, setCenter] = useState({ lat: 0, lng: 0 });
-    const [destination, setDestination] = useState('')
-    const [pickupkm, setPickupkm] = useState(0)
-    const [totalkm, setTotalkm] = useState(0)
-    const [isLoading, setIsLoading] = useState(true);
+const Page: React.FC = () => {
+    const [price, setPrice] = useState<string>('')
+    const [center, setCenter] = useState<{ lat: number, lng: number }>({ lat: 0, lng: 0 });
+    const [destination, setDestination] = useState<string>('')
+    const [pickupkm, setPickupkm] = useState<number>(0)
+    const [totalkm, setTotalkm] = useState<number>(0)
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [directionsResponse, setDirectionsResponse] = useState<google.maps.DirectionsResult | null>(null);
-    const [currentLocation, setCurrentlocation] = useState('')
-    const [rideid, setRideid] = useState(0)
-    const [update, setgetupdate] = useState('')
-    const [pickup, setPickup] = useState('')
+    const [currentLocation, setCurrentlocation] = useState<string>('')
+    const [rideid, setRideid] = useState<number>(0)
+    const [update, setgetupdate] = useState<string>('')
+    const [pickup, setPickup] = useState<string>('')
     const navigate = useRouter()
+
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!,
-        libraries:['places']
+        googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+        libraries: ['places']
     });
-
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
         if (token) {
-            const decodedToken = jwtDecode(token);
+            const decodedToken = jwtDecode<any>(token);
             const email = decodedToken.sub;
 
             const getride = async () => {
@@ -51,6 +52,7 @@ const Page = () => {
 
     useEffect(() => {
         const fetchDirections = () => {
+            if (!window.google) return;
             try {
                 const directionsService = new window.google.maps.DirectionsService();
                 directionsService.route(
@@ -72,7 +74,7 @@ const Page = () => {
         };
         fetchDirections();
 
-    }, [currentLocation, pickup,destination]);
+    }, [currentLocation, pickup, destination]);
 
     useEffect(() => {
         const getlive = async () => {
@@ -85,8 +87,8 @@ const Page = () => {
                 const response = await httpClient.post('ride/getlive', { 'email': email })
                 const driverLocation = { lat: response.data['latitude'], lng: response.data['longitude'] }
                 setCenter({ lat: response.data['latitude'], lng: response.data['longitude'] })
-                const ridefinish = await httpClient.post('ride/isridefinish',{'email':email,'rideid':rideid2})
-                if (ridefinish.data['message'] === 'trip completed'){
+                const ridefinish = await httpClient.post('ride/isridefinish', { 'email': email, 'rideid': rideid2 })
+                if (ridefinish.data['message'] === 'trip completed') {
                     localStorage.removeItem('rideid')
                     navigate.push('/')
 
@@ -105,7 +107,7 @@ const Page = () => {
             </div>
             <div className='w-full bg-white'>
                 <div className='p-10 flex flex-col items-center justify-center'>
-                    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY} libraries={['places']}>
+                    <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={['places']}>
                         <GoogleMap
                             center={center}
                             zoom={15}
@@ -127,9 +129,9 @@ const Page = () => {
                         </GoogleMap>
                     </LoadScript>
                     <div className='w-2/3'>
-                    {rideid &&
-                    <Payment price={parseInt(price, 10)} rideid={rideid} fromride={false}/>}
-                </div>
+                        {rideid &&
+                            <Payment price={parseInt(price, 10)} rideid={rideid} fromride={false} />}
+                    </div>
                 </div>
             </div>
         </div>
