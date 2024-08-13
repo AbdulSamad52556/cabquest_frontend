@@ -2,7 +2,7 @@
 import httpClient from '@/app/httpClient';
 import Sidenav from '@/component/admin/side_nav/sidenav'
 import React, { useEffect, useState } from 'react'
-import { ToastContainer } from 'react-toastify';
+import { Toaster, toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { ArrowCircleRightIcon } from '@heroicons/react/solid';
 
@@ -65,7 +65,7 @@ const Page: React.FC = () => {
   if (!spin) {
     return (
       <div className='bg-white w-full h-screen flex justify-center items-center'>
-        <ToastContainer />
+        <Toaster />
         <span className="loading loading-spinner loading-lg"></span>
       </div>
     );

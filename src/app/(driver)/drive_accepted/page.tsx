@@ -9,8 +9,7 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
 import { getDistance } from 'geolib';
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster, toast } from 'sonner'
 
 interface Coordinates1 {
     lat: number | null;
@@ -88,24 +87,32 @@ const page = () => {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem('daccessToken');
-        if (token) {
-            const decodedToken = jwtDecode(token);
-            const email = decodedToken.sub;
-            setEmail(email)
-            const getride = async () => {
-                const response = await httpClient.post('ride/getride', { 'email': email })
-                setRideid(response.data['ride']['id'])
-                setPrice(response.data['ride']['fare'])
-                setCurrentlocation(response.data['ride']['current_location'])
-                setPickup(response.data['ride']['pick_up_location'])
-                setDestination(response.data['ride']['drop_location'])
-                setPickupkm(parseFloat(response.data['ride']['pickupkm']))
-                setTotalkm(parseFloat(response.data['ride']['total_km']))
-                setPhone(response.data['ride']['phone'])
+        try {
+
+            const token = localStorage.getItem('daccessToken');
+            if (token) {
+                const decodedToken = jwtDecode(token);
+                const email = decodedToken.sub;
+                setEmail(email)
+                const getride = async () => {
+                    const response = await httpClient.post('ride/getride', { 'email': email })
+                    if (response.data['message'] === 'okkk') {
+                        setRideid(response.data['ride']['id'])
+                        setPrice(response.data['ride']['fare'])
+                        setCurrentlocation(response.data['ride']['current_location'])
+                        setPickup(response.data['ride']['pick_up_location'])
+                        setDestination(response.data['ride']['drop_location'])
+                        setPickupkm(parseFloat(response.data['ride']['pickupkm']))
+                        setTotalkm(parseFloat(response.data['ride']['total_km']))
+                        setPhone(response.data['ride']['phone'])
+                    }
+
+                }
+                getride();
+                setIsLoading(false)
             }
-            getride();
-            setIsLoading(false)
+        } catch {
+
         }
 
     }, [])
@@ -158,7 +165,7 @@ const page = () => {
         try {
             const token = localStorage.getItem('daccessToken');
             if (!token) {
-                toast('No access token found', { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+                toast.error('No access token found');
                 return;
             }
 
@@ -173,16 +180,16 @@ const page = () => {
                 if (response.data['message'] === 'ok') {
                     setOtp(response.data['otp']);
                 } else {
-                    toast('Failed to receive OTP', { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+                    toast.error('Failed to receive OTP');
                     return
                 }
                 setOtpform(true);
             } else {
-                toast('You are far from the pickup location', { type: 'warning', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+                toast.warning('You are far from the pickup location');
             }
         } catch (error) {
             console.error('An error occurred:', error);
-            toast('An error occurred while processing your request', { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+            toast.error('An error occurred while processing your request');
         }
     }
     const confirmarrive = async () => {
@@ -240,13 +247,13 @@ const page = () => {
             const response2 = await httpClient.post('booking/cancelledbydriver', { 'email': demail, 'reason': reason })
             const response3 = await httpClient.post('auth/makeactive2', { 'driverid': response2.data['driverid'] })
             if (response.data['message'] === 'ok' && response2.data['message'] === 'ok' && response3.data['message'] === 'ok') {
-                toast('Your ride is cancelled', { type: 'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+                toast.success('Your ride is cancelled')
                 setTimeout(() => {
                     navigate.push('/driver_hub')
                 }, 1500);
             }
             else {
-                toast('something error', { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+                toast.error('something error')
             }
         }
         catch {
@@ -255,18 +262,27 @@ const page = () => {
 
     useEffect(() => {
         const checkusercancelled = async () => {
-            const token = localStorage.getItem('daccessToken');
-            if (token) {
-                const decodedToken = jwtDecode(token);
-                const email = decodedToken.sub;
-                const response1 = await httpClient.post('ride/getride', { 'email': email })
-                const response = await httpClient.post('ride/checkusercancelled', { 'rideid': response1.data['ride']['id'], })
-                if (response.data['message'] === 'cancelled') {
-                    navigate.push('/user_cancelled')
+            try {
+
+                const token = localStorage.getItem('daccessToken');
+                if (token) {
+                    const decodedToken = jwtDecode(token);
+                    const email = decodedToken.sub;
+                    const response1 = await httpClient.post('ride/getride', { 'email': email })
+                    console.log(response1.data)
+                    if (response1.data['message'] === 'not found'){
+                        navigate.push('/user_cancelled')
+                    }
+                    const response = await httpClient.post('ride/checkusercancelled', { 'rideid': response1.data['ride']['id'], })
+                    if (response.data['message'] === 'cancelled') {
+                        navigate.push('/user_cancelled')
+                    }
                 }
+            } catch {
+
             }
         }
-        const intervalId = setInterval(checkusercancelled, 1000);
+        const intervalId = setInterval(checkusercancelled, 2000);
         return () => clearInterval(intervalId);
     }, [])
 
@@ -280,9 +296,10 @@ const page = () => {
 
     return (
         <div className='bg-white h-full lg:h-screen'>
-            <ToastContainer />
+            <div className='fixed'>
 
-
+                <Toaster position='top-right' richColors />
+            </div>
 
             <div className='bg-secondary'>
                 <Header />

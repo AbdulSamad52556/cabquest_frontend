@@ -3,8 +3,8 @@ import httpClient from '@/app/httpClient'
 import Sidenav from '@/component/admin/side_nav/sidenav'
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster, toast } from 'sonner'
+
 
 interface Driver {
     id: number;
@@ -48,7 +48,7 @@ const Page: React.FC = () => {
         const response = await httpClient.post('ride/sendsalary', data)
         if (response.data['message'] === 'success'){
             setAlert('alerted')
-            toast( 'salary credited', { type: 'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false, });
+            toast.success( 'salary credited');
         }
     }
 
@@ -64,7 +64,7 @@ const Page: React.FC = () => {
         const response = await httpClient.post('ride/deductamount', data)
         if (response.data['message'] === 'success'){
             setAlert('alerted')
-            toast( 'amount deducted', { type: 'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false, });
+            toast.success( 'amount deducted');
         }
     }   
 
@@ -78,7 +78,7 @@ const Page: React.FC = () => {
 
     return (
         <div className='bg-white flex'>
-            <ToastContainer/>
+            <Toaster position='top-right' richColors/>
             <div>
                 <Sidenav />
             </div>

@@ -4,7 +4,7 @@ import Sidenav from '@/component/admin/side_nav/sidenav'
 import React, { useCallback, useEffect, useState } from 'react'
 import doc from '../../../../public/static/doc.png'
 import Image from 'next/image';
-import { ToastContainer } from 'react-toastify';
+import { Toaster, toast } from 'sonner'
 import { useRouter } from 'next/navigation';
 
 interface DriverVerification {
@@ -47,21 +47,7 @@ const page = () => {
 
   const handleDownload = async (fileName: string) => {
     window.open(`http://localhost:9639/${fileName}`, '_blank')
-    // try {
-    //   console.log(fileName)
-    //   const response = await httpClient.get(`auth/${fileName}`, {
-    //     responseType: 'blob', 
-    //   });
-    //   const url = window.URL.createObjectURL(new Blob([response.data]));
-    //   const link = document.createElement('a');
-    //   link.href = url;
-    //   link.setAttribute('download', fileName);
-    //   document.body.appendChild(link);
-    //   link.click();
-    //   link.parentNode?.removeChild(link);
-    // } catch (error) {
-    //   console.error('Error downloading file:', error);
-    // }
+    
   };
 
   const onAccept = async (id: number) => {
@@ -90,7 +76,7 @@ const page = () => {
   if (!spin) {
     return (
       <div className='bg-white w-full h-screen flex justify-center items-center'>
-        <ToastContainer />
+        <Toaster />
         <span className="loading loading-spinner loading-lg"></span>
       </div>
     )

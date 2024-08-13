@@ -2,8 +2,7 @@
 import Header from '@/component/driver/driver_header/header'
 import React, { useEffect, useState } from 'react'
 import Home from '@/component/driver/driver_home/home'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster, toast } from 'sonner'
 import io, { Socket } from 'socket.io-client';
 import {jwtDecode} from 'jwt-decode'
 import httpClient from '@/app/httpClient'
@@ -113,19 +112,9 @@ const Page: React.FC = () => {
     try {
       const loading = localStorage.getItem('dloading');
       if (loading) {
-        toast(loading, {
-          type: 'success',
-          theme: 'dark',
-          hideProgressBar: true,
-          pauseOnHover: false,
-          autoClose: 1500,
-          closeButton: false,
-        });
-        const timer = setTimeout(() => {
+        toast.success(loading)
           localStorage.removeItem('dloading');
-          window.location.reload();
-        }, 1500);
-        return () => clearTimeout(timer);
+          // window.location.reload();
       }
     } catch (error) {
       console.error(error);
@@ -134,7 +123,7 @@ const Page: React.FC = () => {
 
   const cancelRequest = async () =>{
     if (bookingid === 0 || reason === ''){
-      toast('reason is not valid', { type: 'warning', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+      toast.warning('reason is not valid')
       return
     }
 
@@ -142,11 +131,11 @@ const Page: React.FC = () => {
       const response = await httpClient.post('booking/cancelrequest', { id: bookingid, email: driveremail, user_id: userid, reason:reason });
       if (response.data['message'] === 'cancelled successful') {
         setCancelform(false)
-        toast(response.data['message'], { type: 'warning', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+        toast.warning(response.data['message']);
       }
     } catch (error) {
       console.error('Error cancelling request:', error);
-      toast('Failed to cancel the request', { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+      toast.error('Failed to cancel the request');
     }
   }
 
@@ -198,7 +187,7 @@ const Page: React.FC = () => {
   return (
     <div className='bg-secondary h-screen'>
       
-      <ToastContainer />
+      <Toaster position='top-right' richColors/>
       <div className='bg-secondary'>
         <Header />
         {cancelform && (

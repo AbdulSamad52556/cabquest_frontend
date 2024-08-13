@@ -6,8 +6,7 @@ import { LoadScript, GoogleMap, Marker, DirectionsRenderer, useJsApiLoader } fro
 import { jwtDecode } from 'jwt-decode';
 import httpClient from '@/app/httpClient';
 import { useRouter } from 'next/navigation'
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster, toast } from 'sonner'
 import Payment from '../../../component/razorpay/payment'
 
 interface DecodedToken {
@@ -124,13 +123,13 @@ const page = () => {
             const response2 = await httpClient.post('booking/cancelfromuser', { 'email': email, 'reason': reason })
             const response3 = await httpClient.post('auth/makeactive2', { 'driverid': response2.data['driverid'] })
             if (response.data['message'] === 'ok' && response2.data['message'] === 'ok' && response3.data['message'] === 'ok') {
-                toast('Your ride is cancelled', { type: 'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+                toast.success('Your ride is cancelled')
                 setTimeout(() => {
                     navigate.push('/')
                 }, 1500);
             }
             else {
-                toast('something error', { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+                toast.error('something error')
             }
         }
     }
@@ -143,7 +142,7 @@ const page = () => {
             <div className='w-full flex bg-white flex-col lg:flex-row'>
                 <div className='w-full lg:w-1/2 flex justify-center items-center p-5'>
 
-                    <ToastContainer />
+                    <Toaster position='top-right' richColors />
 
                     {isfetch ? (
                         <div className="border-2 w-full lg:w-1/2 border-gray-300 p-2 rounded-lg">

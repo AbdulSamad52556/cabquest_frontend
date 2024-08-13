@@ -3,8 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Header2 from '@/component/user/header2/header2';
 import Sidenav from '@/component/user/sidenav/sidenav';
 import { GoogleMap, Marker, LoadScript, useJsApiLoader, Autocomplete, DirectionsRenderer } from '@react-google-maps/api';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster, toast } from 'sonner'
 import httpClient from '@/app/httpClient';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
@@ -55,17 +54,11 @@ const Page: React.FC = () => {
   const [alert, setAlert] = useState('')
   const router = useRouter();
 
-  const { isLoaded, loadError } = useJsApiLoader({
+  const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!,
     libraries: ['places']
   });
-
-  useEffect(() => {
-    if (!localStorage.getItem('accessToken')) {
-      router.push('/login');
-    }
-  }, [router]);
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -78,7 +71,7 @@ const Page: React.FC = () => {
     };
     fetchVehicles();
     setAlert('alerted')
-  }, []);
+  }, [isLoaded]);
 
   useEffect(() => {
     const getLocation = () => {
@@ -103,9 +96,13 @@ const Page: React.FC = () => {
         console.error('Geolocation is not supported by this browser.');
       }
     };
-
-    getLocation();
-  }, [isFormVisible, vehicles, alert]);
+    if (!localStorage.getItem('accessToken')) {
+      router.push('/login');
+    }
+    else{
+      getLocation();
+    }
+  }, [isFormVisible, vehicles, alert, isLoaded]);
 
   useEffect(() => {
     const socket = socketIOClient('http://localhost:9638');
@@ -207,7 +204,7 @@ const Page: React.FC = () => {
 
         const response = await httpClient.post('booking/riderequest', data);
         if (response.data.message === 'driver is not available' || response.data.message === 'user not found') {
-          toast(response.data.message, { type: 'warning', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+          toast.warning(response.data.message);
         } else if (response.data.message === 'searching for driver') {
           router.push(`/searchingdriver?userid=${response.data.userid}&driverid=${response.data.driverid}`);
         }
@@ -215,7 +212,7 @@ const Page: React.FC = () => {
 
     } catch (error) {
       console.error("Error during driver request:", error);
-      toast("An error occurred. Please try again.", { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+      toast.error("An error occurred. Please try again.");
     } finally {
       setSpin2(false);
     }
@@ -285,7 +282,7 @@ const Page: React.FC = () => {
 
   return (
     <div className='bg-white h-full lg:h-screen w-full'>
-      <ToastContainer />
+      <Toaster position='top-right' richColors />
       {spin2 &&
         <div className='fixed z-10 bg-black bg-opacity-50 w-full h-screen flex justify-center items-center'>
           <span className="loading loading-spinner loading-lg"></span>

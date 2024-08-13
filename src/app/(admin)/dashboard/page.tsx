@@ -2,8 +2,7 @@
 import Sidenav from '@/component/admin/side_nav/sidenav'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster, toast } from 'sonner'
 import { Chart as ChartJS, Title, BarElement, LineElement, CategoryScale, LinearScale } from 'chart.js';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'
@@ -68,7 +67,7 @@ const Page: React.FC = () => {
             setLoading(true);
         }
         if (aloading) {
-            toast(aloading, { type: 'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false, });
+            toast.success(aloading);
             const timer = setTimeout(() => {
                 localStorage.removeItem('aloading');
             }, 3000);
@@ -154,7 +153,6 @@ const Page: React.FC = () => {
     if (!loading) {
         return (
             <div className='bg-white w-full h-screen flex justify-center items-center'>
-                <ToastContainer />
                 <span className="loading loading-spinner loading-lg"></span>
             </div>
         );
@@ -162,7 +160,7 @@ const Page: React.FC = () => {
 
     return (
         <div className='flex bg-white'>
-            <ToastContainer />
+            <Toaster position='top-right' richColors/>
             <div>
                 <Sidenav />
             </div>

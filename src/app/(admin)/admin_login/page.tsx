@@ -6,8 +6,7 @@ import image from '../../../../public/static/WhatsApp_Image_2024-06-06_at_10.26.
 import image2 from '../../../../public/static/WhatsApp Image 2024-06-17 at 6.36.02 PM.jpeg'
 import { LockClosedIcon, MailIcon } from '@heroicons/react/solid'
 import httpClient from '@/app/httpClient'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster, toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
 const page = () => {
@@ -49,11 +48,11 @@ const page = () => {
                 localStorage.setItem('aloading', response.data['message'])
                 navigate.push('/dashboard')
             } else {
-                toast(response.data.message, { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false, })
+                toast.error(response.data.message)
             }
         }
         catch {
-            toast('credantials are not found', { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false, })
+            toast.error('credantials are not found')
         }
     }
 
@@ -84,7 +83,7 @@ const page = () => {
                 </div>
                 <div className='w-1/2 lg:w-1/2 gap-10 flex flex-col justify-center items-center h-full'>
                     <h1 className='text-4xl text-white'>LogIn</h1>
-                    <ToastContainer />
+                    <Toaster position='top-right' richColors />
                     <form method='POST' onSubmit={handleSubmit} >
                         <div className='flex flex-col gap-5'>
                             <div className="relative">
