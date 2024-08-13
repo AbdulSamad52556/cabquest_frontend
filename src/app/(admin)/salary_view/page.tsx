@@ -22,14 +22,18 @@ const Page: React.FC = () => {
     const searchParams = useSearchParams()
     const [driverid, setDriverid] = useState(0)
     const [alert, setAlert] = useState('')
+    const [deduction, setDeduction] = useState(0)
 
 
     useEffect(() => {
         const driver_id = searchParams.get('driver_id')
-        setDriverid(parseInt(driver_id, 10))
+        if (driver_id !== null) {
+            setDriverid(parseInt(driver_id, 10));
+          } 
         const getdata = async () => {
             const response = await httpClient.post('ride/getdata', { 'driver_id': driver_id })
             console.log(response.data)
+            setDeduction(response.data[response.data.length - 1])
             setDrivers(response.data)
         }
         getdata();
@@ -68,12 +72,10 @@ const Page: React.FC = () => {
         }
     }   
 
-    const formatDate = (dateString) => {
-        // Parse the date string into a Date object
+    const formatDate = (dateString: Date) => {
         const date = new Date(dateString);
       
-        // Format the date to 'YYYY-MM-DD'
-        return date.toLocaleDateString('en-GB'); // 'en-GB' format gives 'dd/mm/yyyy'
+        return date.toLocaleDateString('en-GB');
       };
 
     return (
@@ -85,7 +87,7 @@ const Page: React.FC = () => {
             <div className=" bg-gray-100 p-8 w-full ">
                 <div className=" bg-white p-6 rounded-lg shadow-md">
                     <h1 className="text-3xl font-bold mb-6 text-gray-800">Salary Information</h1>
-                    <h2 className="text-xl text-end font-bold mb-6 text-gray-800">Total deduction: ₹ {drivers[drivers.length - 1]}</h2>
+                    <h2 className="text-xl text-end font-bold mb-6 text-gray-800">Total deduction: ₹ {deduction}</h2> 
                     <div className="overflow-x-auto">
                         <table className="max-w-full bg-white divide-y divide-gray-200">
                             <thead className="bg-gray-50">
