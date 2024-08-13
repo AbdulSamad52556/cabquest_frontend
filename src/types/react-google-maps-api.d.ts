@@ -1,29 +1,22 @@
-import { RefObject, ReactNode } from 'react';
-
 declare module '@react-google-maps/api' {
-  interface LoadScriptProps extends LoadScriptUrlOptions {
-    children?: ReactNode;
-    id: string;
-    nonce?: string;
-    loadingElement?: ReactNode;
-    onLoad?: () => void;
-    onError?: (error: Error) => void;
-    onUnmount?: () => void;
-    preventGoogleFontsLoading?: boolean;
+    interface LoadScriptProps {
+      id: string;
+      version: string;
+      nonce?: string;
+      googleMapsApiKey: string;
+      language?: string;
+      region?: string;
+      libraries?: string[];
+      preventGoogleFontsLoading?: boolean;
+      // Add any other properties here
+    }
+  
+    export class LoadScript extends React.Component<LoadScriptProps> {
+      static defaultProps: {
+        id: string;
+        version: string;
+      };
+    }
+  
+    // Add other necessary type declarations here
   }
-
-  class LoadScriptComponent extends React.Component<LoadScriptProps> {
-    check: RefObject<HTMLDivElement>;
-    state: {
-      loaded: boolean;
-    };
-    cleanupCallback: () => void;
-    componentDidMount(): void;
-    componentDidUpdate(prevProps: LoadScriptProps): void;
-    componentWillUnmount(): void;
-    isCleaningUp: () => Promise<void>;
-    cleanup: () => void;
-    injectScript: () => void;
-    render(): ReactNode;
-  }
-}
