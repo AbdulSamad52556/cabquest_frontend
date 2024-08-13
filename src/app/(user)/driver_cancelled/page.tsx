@@ -3,7 +3,7 @@ import Header2 from '@/component/user/header2/header2'
 import React from 'react'
 import { useRouter } from 'next/navigation'
 
-const page = () => {
+const Page = () => {
     const navigate = useRouter();
     const buttonclick = () =>{
         navigate.push('/ride')
@@ -24,4 +24,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

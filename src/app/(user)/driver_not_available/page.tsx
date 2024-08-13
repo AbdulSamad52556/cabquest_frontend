@@ -6,7 +6,7 @@ import Header2 from '@/component/user/header2/header2'
 import { useRouter } from 'next/navigation'
 
 
-const page = () => {
+const Page = () => {
     const navigate = useRouter()
     
     return (
@@ -33,4 +33,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

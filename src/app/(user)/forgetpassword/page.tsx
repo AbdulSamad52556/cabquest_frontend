@@ -5,7 +5,7 @@ import image from '../../../../public/static/WhatsApp_Image_2024-06-05_at_23.43.
 import { MailIcon } from '@heroicons/react/solid';
 
 
-const page = () => {
+const Page = () => {
   return (
     <div className='bg-primary min-h-screen'>
 
@@ -39,4 +39,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

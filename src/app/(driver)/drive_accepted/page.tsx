@@ -21,7 +21,7 @@ interface Coordinates {
     longitude: number | null;
 }
 
-const page = () => {
+const Page = () => {
     const [price, setPrice] = useState('')
     const [currentLocation, setCurrentlocation] = useState('')
     const [pickup, setPickup] = useState('')
@@ -439,4 +439,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

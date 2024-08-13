@@ -4,7 +4,7 @@ import image from '../../../../public/static/email (3).png'
 import { ArrowDownIcon } from '@heroicons/react/solid'
 import Link from 'next/link'
 
-const page = () => {
+const Page = () => {
   return (
     <div className='flex w-full h-screen justify-center items-center'>
         <div className='w-3/4 md:w-2/4 h-3/5 md:h-3/4 bg-primary-light flex flex-col items-center p-10 gap-10 rounded-md'>
@@ -21,4 +21,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

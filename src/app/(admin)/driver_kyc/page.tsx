@@ -17,15 +17,15 @@ interface DriverVerification {
   rc: string;
 }
 
-const page = () => {
+const Page = () => {
   const [data, setData] = useState<DriverVerification[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [reload, setReload] = useState<boolean>(false);
-  const [spin, setSpin] = useState(false)
+  const [spin, setSpin] = useState<boolean>(false)
   const navigate = useRouter();
 
-  const fetchData = useCallback(async () => { // Use useCallback to memoize the function
+  const fetchData = useCallback(async () => { 
     try {
       setLoading(true);
       const response = await httpClient.get<DriverVerification[]>('auth/driver_verification');
@@ -161,4 +161,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

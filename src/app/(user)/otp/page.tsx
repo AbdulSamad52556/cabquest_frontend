@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation'
 
-const page = () => {
+const Page = () => {
 
   const [otp, setOtp] = useState('')
   const navigate = useRouter();
@@ -76,4 +76,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

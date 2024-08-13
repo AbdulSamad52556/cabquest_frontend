@@ -9,11 +9,11 @@ import httpClient from '@/app/httpClient'
 import { Toaster, toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
-const page = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+const Page = () => {
+    const [email, setEmail] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
     const navigate = useRouter();
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
 
     useEffect(() => {
@@ -126,4 +126,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

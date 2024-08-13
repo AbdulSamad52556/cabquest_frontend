@@ -1,7 +1,7 @@
 import React from 'react'
 import Header from '@/component/driver/driver_header/header'
 import Notification from '@/component/driver/notification/notification'
-const page = () => {
+const Page = () => {
   return (
     <div className='bg-secondary h-screen w-full'>
         <div>
@@ -15,4 +15,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

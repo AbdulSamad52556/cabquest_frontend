@@ -18,7 +18,7 @@ interface Ride {
   date: string;
 }
 
-const page = () => {
+const Page = () => {
   const navigate = useRouter();
   const [spin, setSpin] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -103,4 +103,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

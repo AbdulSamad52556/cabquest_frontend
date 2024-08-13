@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/navigation';
 import image from '../../../../public/static/Eclipse@1x-1.0s-200px-200px (1).gif'
 
-const page = () => {
+const Page = () => {
     const [fullname, setFullname] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -139,4 +139,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

@@ -23,6 +23,12 @@ const UserChat = () => {
   const [rideid, setRideid] = useState<number>(0)
   const [name, setName] = useState<string>('')
 
+  interface DecodedToken {
+    userId: string;
+    username: string;
+    // Add other properties as needed
+  }
+  
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');

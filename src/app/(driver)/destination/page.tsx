@@ -5,7 +5,7 @@ import { LoadScript, DistanceMatrixService, GoogleMap, Marker, useJsApiLoader, P
 import { jwtDecode } from 'jwt-decode'
 import httpClient from '@/app/httpClient'
 import { useRouter } from 'next/navigation';
-const page = () => {
+const Page = () => {
     const [price, setPrice] = useState('')
     const [center, setCenter] = useState({ lat: 0, lng: 0 });
     const [destination, setDestination] = useState('')
@@ -178,4 +178,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

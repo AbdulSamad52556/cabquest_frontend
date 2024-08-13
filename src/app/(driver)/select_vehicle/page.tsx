@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import httpClient from '@/app/httpClient'
 import { jwtDecode } from 'jwt-decode'
 
-const page = () => {
+const Page = () => {
     const navigate = useRouter();
     const [spin, setSpin] = useState(false)
 
@@ -15,7 +15,7 @@ const page = () => {
         const token = localStorage.getItem('daccessToken');
     
         console.log('tokens: ',token)
-        const decodedToken = jwtDecode(token);
+        const decodedToken = jwtDecode(token!);
         const email = decodedToken.sub;
         return email
       }
@@ -67,4 +67,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

@@ -3,7 +3,7 @@ import Header from '@/component/driver/driver_header/header'
 import Bank_form from '@/component/driver/bank_form/bank_form'
 
 
-const page = () => {
+const Page = () => {
   return (
     <div>
         <div className='bg-secondary'>
@@ -17,4 +17,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

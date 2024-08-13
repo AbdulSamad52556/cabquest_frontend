@@ -5,7 +5,7 @@ import Link from 'next/link'
 import React from 'react'
 import driver from '../../../../public/static/b53a2a2e855f9250f35b49d9f73b99d5-removebg-preview.png'
 
-const page = () => {
+const Page = () => {
     return (
         <div className='bg-secondary w-full h-screen'>
             <Nav />
@@ -51,4 +51,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

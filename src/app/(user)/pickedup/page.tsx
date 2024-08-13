@@ -13,7 +13,7 @@ interface DecodedToken {
     sub: string;
 }
 
-const page = () => {
+const Page = () => {
     const [center, setCenter] = useState({ lat: 0, lng: 0 });
     const [traveltime, setTraveltime] = useState('')
     const [fare, setFare] = useState('')
@@ -297,4 +297,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

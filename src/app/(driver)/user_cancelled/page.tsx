@@ -3,7 +3,7 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import Header from '@/component/driver/driver_header/header'
 
-const page = () => {
+const Page = () => {
     const navigate = useRouter();
     const buttonclick = () =>{
         navigate.push('/driver_hub')
@@ -24,4 +24,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

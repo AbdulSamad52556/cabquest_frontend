@@ -8,7 +8,7 @@ import { useSearchParams } from 'next/navigation'
 import httpClient from '@/app/httpClient'
 import { useRouter } from 'next/navigation'
 
-const page = () => {
+const Page = () => {
     const searchParams = useSearchParams()
     const navigate = useRouter()
     
@@ -55,4 +55,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page
