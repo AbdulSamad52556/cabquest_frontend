@@ -55,7 +55,7 @@ const Page = () => {
     }
     const intervalId = setInterval(ispayed, 1000);
     return () => clearInterval(intervalId);
-  },[navigate])
+  },[navigate, rideid])
 
   return (
     <div className='bg-black h-screen'>
