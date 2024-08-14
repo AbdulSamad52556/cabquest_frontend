@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import image from '../../../../public/static/WhatsApp_Image_2024-06-05_at_23.43.42_16f84c9f-removebg-preview.png'
 import image2 from '../../../../public/static/bell.png'
 import { useRouter } from 'next/navigation';
@@ -12,11 +12,17 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Header = () => {
   const navigate = useRouter();
-  const signOut = () => {
+  const [email, setEmail] = useState<string>('')
 
+  useEffect(() => {
     const token = localStorage.getItem('daccessToken');
     const decodedToken = jwtDecode<any>(token || '');
     const email = decodedToken.sub;
+    setEmail(email)
+  }, [navigate])
+
+  const signOut = () => {
+
     const checknotificationpending = async () => {
       const response = await httpClient.post('booking/checknotificationpending', { 'email': email })
       if (response.data['message'] === 'pending') {

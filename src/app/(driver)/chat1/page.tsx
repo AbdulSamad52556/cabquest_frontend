@@ -30,7 +30,6 @@ const DriverChat = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-
       const token = localStorage.getItem('daccessToken');
       if (token) {
         const decodedToken = jwtDecode<DecodedToken>(token);
