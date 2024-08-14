@@ -34,6 +34,7 @@ const UserChat = () => {
 
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
     const token = localStorage.getItem('accessToken');
     if (token) {
       const decodedToken = jwtDecode<DecodedToken>(token);
@@ -50,6 +51,7 @@ const UserChat = () => {
       }
       getrideid();
     }
+  }
   }, [])
 
   useEffect(() => {

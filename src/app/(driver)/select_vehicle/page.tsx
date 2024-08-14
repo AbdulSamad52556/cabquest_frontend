@@ -12,6 +12,7 @@ const Page = () => {
 
 
     const getemail = () =>{
+      if (typeof window !== 'undefined') {
         const token = localStorage.getItem('daccessToken');
     
         console.log('tokens: ',token)
@@ -19,9 +20,11 @@ const Page = () => {
         const email = decodedToken.sub;
         return email
       }
+      }
 
 
     useEffect(()=>{
+      if (typeof window !== 'undefined') {
         try{
             const token = localStorage.getItem('isdriver')
             if (!token){
@@ -44,6 +47,7 @@ const Page = () => {
             }
           }
           isVehicleadded();
+        }
     },[navigate])
 
     if (!spin) {

@@ -30,6 +30,7 @@ const Page: React.FC = () => {
     });
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
         const token = localStorage.getItem('accessToken');
         if (token) {
             const decodedToken = jwtDecode<any>(token);
@@ -48,6 +49,7 @@ const Page: React.FC = () => {
             getride();
             setIsLoading(false)
         }
+    }
     }, [])
 
     useEffect(() => {
@@ -77,6 +79,7 @@ const Page: React.FC = () => {
     }, [currentLocation, pickup, destination]);
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
         const getlive = async () => {
             const token = localStorage.getItem('accessToken');
             const rideid2 = localStorage.getItem('rideid')
@@ -98,6 +101,7 @@ const Page: React.FC = () => {
         }
         const intervalId = setInterval(getlive, 1000);
         return () => clearInterval(intervalId);
+    }
     }, [navigate])
 
     return (

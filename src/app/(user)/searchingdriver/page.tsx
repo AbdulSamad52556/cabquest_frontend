@@ -14,7 +14,7 @@ const Page = () => {
     
     
     useEffect(()=>{
-        
+        if (typeof window !== 'undefined') {
         const checkride = async()=>{
             const userid = searchParams.get('userid')
             const driverid = searchParams.get('driverid')
@@ -31,8 +31,8 @@ const Page = () => {
         }
         const intervalId = setInterval(checkride, 1000);
         return () => clearInterval(intervalId);
-
-    })
+    }
+    },[])
 
 
     return (

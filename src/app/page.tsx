@@ -8,24 +8,26 @@ import { useEffect } from "react";
 
 const Home: React.FC = () => {
   useEffect(() => {
-    try {
-      const loading = localStorage.getItem('loading')
-      const loading2 = localStorage.getItem('logout')
-      if (loading) {
-        toast.success(loading)
-        localStorage.removeItem('loading')
-      } else if (loading2) {
-        toast.success('logout successfully')
-        localStorage.removeItem('logout')
+    if (typeof window !== 'undefined') {
+      try {
+        const loading = localStorage.getItem('loading')
+        const loading2 = localStorage.getItem('logout')
+        if (loading) {
+          toast.success(loading)
+          localStorage.removeItem('loading')
+        } else if (loading2) {
+          toast.success('logout successfully')
+          localStorage.removeItem('logout')
+        }
+      } catch {
       }
-    } catch {
     }
   }, [])
 
   return (
     <>
       <Header />
-      <Toaster position="top-right" richColors/>
+      <Toaster position="top-right" richColors />
       <Banner />
       <Body />
       <Footer />

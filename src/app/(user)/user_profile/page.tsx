@@ -19,7 +19,9 @@ interface Trip {
 const Page :  React.FC = ()=> {
     const [data, setDate] = useState<Trip[]>([])
     const navigate = useRouter();
+
     useEffect(() => {
+        if (typeof window !== 'undefined') {
         const gettripuser = async () => {
             const token = localStorage.getItem('accessToken');
             if (token) {
@@ -33,6 +35,7 @@ const Page :  React.FC = ()=> {
             }
         }
         gettripuser();
+    }
     }, [navigate])
 
 

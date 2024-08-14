@@ -21,6 +21,7 @@ const Page = () => {
 
 
     useEffect(()=>{
+        if (typeof window !== 'undefined') {
         try{
             const tok = localStorage.getItem('isdriver')
             if (tok){
@@ -33,6 +34,7 @@ const Page = () => {
             setSpin(true)
 
         }
+    }
     },[navigate])
 
     const handleSubmit = async (e: { preventDefault: () => void }) => {

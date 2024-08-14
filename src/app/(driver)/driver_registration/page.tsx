@@ -11,7 +11,9 @@ const Page = () => {
   const [spin, setSpin] = useState(false)
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
     try {
+      
       const loading = localStorage.getItem('dloading')
       const isdriver = localStorage.getItem('isdriver');
       
@@ -30,7 +32,7 @@ const Page = () => {
     }
     catch {
       router.push('/login_driver');
-    }
+    }}
   }, [router])
 
   if (!spin) {

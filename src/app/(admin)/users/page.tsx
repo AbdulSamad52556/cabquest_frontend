@@ -22,15 +22,17 @@ const Page: React.FC = () => {
 
   useEffect(() => {
     const checkToken = () => {
-      const token = localStorage.getItem('isadmin')
-      if (!token) {
-        router.push('/admin_login')
-      } else {
-        setSpin(false)
+      if (typeof window !== 'undefined') {
+        const token = localStorage.getItem('isadmin')
+        if (!token) {
+          router.push('/admin_login')
+        } else {
+          setSpin(false)
+        }
       }
     }
-    checkToken()
-  }, [router])
+      checkToken()
+    }, [router])
 
   useEffect(() => {
     const fetchUsers = async () => {

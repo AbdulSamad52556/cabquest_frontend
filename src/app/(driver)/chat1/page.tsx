@@ -25,7 +25,6 @@ const DriverChat = () => {
   const [driverid, setDriverid] = useState<number>(0);
   const [rideid, setRideid] = useState<number>(0);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const token = localStorage.getItem('daccessToken');
   const [name, setName] = useState<string>('');
 
   useEffect(() => {

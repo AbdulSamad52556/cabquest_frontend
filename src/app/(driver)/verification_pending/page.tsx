@@ -13,6 +13,7 @@ const Page = () => {
 
 
   useEffect(()=>{
+    if (typeof window !== 'undefined') {
     const isdriver = localStorage.getItem('isdriver')
     const isverified = async()=>{
       const token = localStorage.getItem('daccessToken')
@@ -34,7 +35,7 @@ const Page = () => {
         setSpin(true)
       }
     }, 3000);
-    
+  }
   },[navigate])
 
   if (!spin) {

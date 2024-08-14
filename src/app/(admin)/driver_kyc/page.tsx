@@ -60,7 +60,9 @@ const Page = () => {
   };
 
   useEffect(() => {
+    
     try {
+      if (typeof window !== 'undefined') {
       const token = localStorage.getItem('isadmin')
       if (token) {
         setSpin(true)
@@ -68,6 +70,7 @@ const Page = () => {
       } else {
         navigate.push('/admin_login')
       }
+    }
     } catch {
 
     }

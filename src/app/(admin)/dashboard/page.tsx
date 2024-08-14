@@ -59,6 +59,7 @@ const Page: React.FC = () => {
     }, [selectedYear]);
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
         const a_tokens = localStorage.getItem('aaccessToken');
         const aloading = localStorage.getItem('aloading');
         if (!a_tokens) {
@@ -73,6 +74,7 @@ const Page: React.FC = () => {
             }, 3000);
             return () => clearTimeout(timer);
         }
+    }
     }, [navigate]);
 
     useEffect(() => {

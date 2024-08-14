@@ -41,12 +41,14 @@ const Page: React.FC = () => {
 
   useEffect(() => {
     try {
+      if (typeof window !== 'undefined') {
       const token = localStorage.getItem('isadmin');
       if (token) {
         setSpin(true);
       } else {
         router.push('admin_login');
       }
+    }
     } catch {
       // Handle error if needed
     }

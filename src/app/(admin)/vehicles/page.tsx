@@ -50,12 +50,14 @@ const Page: React.FC = () => {
 
     useEffect(() => {
         try {
+            if (typeof window !== 'undefined') {
             const token = localStorage.getItem('isadmin')
             if (token) {
                 setSpin(true)
             } else {
                 navigate.push('admin_login')
             }
+        }
         } catch {
 
         }

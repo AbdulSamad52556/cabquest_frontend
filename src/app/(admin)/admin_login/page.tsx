@@ -17,6 +17,7 @@ const Page = () => {
 
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
         const toke = localStorage.getItem('isadmin')
         if (toke) {
             navigate.push('/dashboard')
@@ -24,6 +25,7 @@ const Page = () => {
         else {
             setLoading(true)
         }
+    }
     }, [navigate])
 
 

@@ -16,6 +16,7 @@ const Page = () => {
   const navigate = useRouter()
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
     const token = localStorage.getItem('daccessToken');
     if (token) {
         const decodedToken = jwtDecode(token);
@@ -30,6 +31,7 @@ const Page = () => {
         }
         getride();
     }
+  }
 
 }, [])
 

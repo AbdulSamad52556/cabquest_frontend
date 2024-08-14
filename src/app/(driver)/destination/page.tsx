@@ -24,6 +24,7 @@ const Page = () => {
     });
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
         const token = localStorage.getItem('daccessToken');
         if (token) {
             const decodedToken = jwtDecode(token);
@@ -42,7 +43,7 @@ const Page = () => {
             getride();
             setIsLoading(false)
         }
-
+    }
     }, [])
 
     useEffect(() => {
@@ -79,7 +80,7 @@ const Page = () => {
     }, [destination, pickup, isLoaded]);
 
     useEffect(() => {
-
+        if (typeof window !== 'undefined') {
         const getloc = () => {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -107,10 +108,11 @@ const Page = () => {
         }
         const intervalId = setInterval(getloc, 1000);
         return () => clearInterval(intervalId);
+    }
     }, []);
 
     const reached = async () => {
-
+        if (typeof window !== 'undefined') {
         const response3 = await httpClient.post('ride/getpayment', { 'rideid': rideid })
         if (response3.data['message'] === 'ok') {
             navigate.push('/payment_not_done')
@@ -127,6 +129,7 @@ const Page = () => {
                 navigate.push('/driver_hub')
             }
         }
+    }
     }
 
     // if (!isLoaded) {

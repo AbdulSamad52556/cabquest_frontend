@@ -15,10 +15,12 @@ const Header = () => {
   const [email, setEmail] = useState<string>('')
 
   useEffect(() => {
-    const token = localStorage.getItem('daccessToken');
-    const decodedToken = jwtDecode<any>(token || '');
-    const email = decodedToken.sub;
-    setEmail(email)
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('daccessToken');
+      const decodedToken = jwtDecode<any>(token || '');
+      const email = decodedToken.sub;
+      setEmail(email)
+    }
   }, [navigate])
 
   const signOut = () => {

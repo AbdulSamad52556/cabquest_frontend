@@ -91,6 +91,7 @@ const Page = () => {
     }, [isLoaded])
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
         const driverarrived = async () => {
             const token = localStorage.getItem('accessToken');
             const rideid = localStorage.getItem('rideid')
@@ -108,12 +109,14 @@ const Page = () => {
         }
         const intervalId = setInterval(driverarrived, 1000);
         return () => clearInterval(intervalId);
+    }
     }, [navigate])
 
     const handleClick = () => {
         window.location.href = `tel:${phone}`;
     };
     const cancelRequest = async () => {
+        if (typeof window !== 'undefined') {
         const token = localStorage.getItem('accessToken');
         const rideid = localStorage.getItem('rideid')
         if (token) {
@@ -132,6 +135,7 @@ const Page = () => {
                 toast.error('something error')
             }
         }
+    }
     }
 
     return (

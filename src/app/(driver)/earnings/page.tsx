@@ -40,6 +40,7 @@ const Page: React.FC = () => {
     };
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
         const weeklyearnings = async () => {
             const token = localStorage.getItem('daccessToken');
             if (token) {
@@ -62,6 +63,7 @@ const Page: React.FC = () => {
             }
         }
         weeklyearnings();
+    }
     }, [navigate])
 
     return (

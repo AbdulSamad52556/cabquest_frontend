@@ -74,6 +74,7 @@ const Page: React.FC = () => {
   }, [isLoaded]);
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
     const getLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -102,6 +103,7 @@ const Page: React.FC = () => {
     else{
       getLocation();
     }
+  }
   }, [isFormVisible, vehicles, alert, isLoaded, router]);
 
   useEffect(() => {
@@ -183,6 +185,7 @@ const Page: React.FC = () => {
   };
 
   const confirmBooking = async (e: React.FormEvent) => {
+    if (typeof window !== 'undefined') {
     setSpin2(true)
     e.preventDefault();
 
@@ -216,6 +219,7 @@ const Page: React.FC = () => {
     } finally {
       setSpin2(false);
     }
+  }
   };
 
   const onUnmount = useCallback((map: any) => {
