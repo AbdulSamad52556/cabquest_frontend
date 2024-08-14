@@ -29,24 +29,27 @@ const DriverChat = () => {
   const [name, setName] = useState<string>('');
 
   useEffect(() => {
-    const token = localStorage.getItem('daccessToken');
-    if (token) {
-      const decodedToken = jwtDecode<DecodedToken>(token);
-      const email = decodedToken.sub;
-      const getrideid = async () => {
-        const response = await httpClient.post('communication/getrideid', { 'email': email })
-        console.log(response.data)
-        setDriverid(response.data['driverid'])
-        setUserid(response.data['userid'])
-        setRideid(response.data['rideid'])
-        setRoom(response.data['rideid'])
-        setName(response.data['name'])
-        const response2 = await httpClient.get(`communication/messages/${response.data['rideid']}`)
-      console.log(response.data)
-      setMessages(response2.data)
-      }
-      getrideid();
+    if (typeof window !== 'undefined') {
 
+      const token = localStorage.getItem('daccessToken');
+      if (token) {
+        const decodedToken = jwtDecode<DecodedToken>(token);
+        const email = decodedToken.sub;
+        const getrideid = async () => {
+          const response = await httpClient.post('communication/getrideid', { 'email': email })
+          console.log(response.data)
+          setDriverid(response.data['driverid'])
+          setUserid(response.data['userid'])
+          setRideid(response.data['rideid'])
+          setRoom(response.data['rideid'])
+          setName(response.data['name'])
+          const response2 = await httpClient.get(`communication/messages/${response.data['rideid']}`)
+          console.log(response.data)
+          setMessages(response2.data)
+        }
+        getrideid();
+
+      }
     }
 
   }, [])
@@ -55,7 +58,7 @@ const DriverChat = () => {
   useEffect(() => {
     const initializeSocket = (id: number): (() => void) => {
       socket.emit('join', { room });
-      
+
       socket.on('receive_message', (data) => {
         setMessages((prevMessages) => [...prevMessages, data]);
       });
@@ -73,7 +76,7 @@ const DriverChat = () => {
 
   }, [room, rideid]);
 
- 
+
 
 
   const sendMessage = () => {
@@ -96,7 +99,7 @@ const DriverChat = () => {
 
   const hideScrollbarWebkitStyle: React.CSSProperties = {
     ...hideScrollbarStyle,
-    overflowY: 'scroll', 
+    overflowY: 'scroll',
   };
 
   return (

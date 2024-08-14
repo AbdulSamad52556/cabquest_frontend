@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect,Suspense } from 'react'
 import image from '../../../../public/static/Premium Vector _ People waiting for flight.jpeg'
 import Image from 'next/image'
 import Header2 from '@/component/user/header2/header2'
@@ -36,6 +36,8 @@ const Page = () => {
 
 
     return (
+        <Suspense fallback={<div>Loading...</div>}>
+
         <div className='bg-white h-screen'>
             <div className='bg-white'>
                 <Header2 />
@@ -52,6 +54,8 @@ const Page = () => {
             </div>
 
         </div>
+        </Suspense>
+
     )
 }
 

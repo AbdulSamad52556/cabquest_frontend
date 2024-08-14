@@ -19,7 +19,8 @@ const Sidenav = () => {
     const pat = usePathname();
 
     useEffect(() => {
-        if (localStorage.getItem('isadmin') === 'true') {
+        if (typeof window !== 'undefined') {
+            if (localStorage.getItem('isadmin') === 'true') {
             navigate.push(current)
             if (pat === '/dashboard'){
                 setNumb([true, false,false,false,false,false,false])
@@ -36,7 +37,7 @@ const Sidenav = () => {
             }else if(pat === '/driver_kyc'){
                 setNumb([ false,false,false,false,false,false,true])
             }
-            
+        }
         }
     }, [current, navigate, pat])
 

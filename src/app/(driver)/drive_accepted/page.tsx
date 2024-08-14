@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense  } from 'react'
 import Header from '@/component/driver/driver_header/header'
 import { jwtDecode } from 'jwt-decode'
 import httpClient from '@/app/httpClient'
@@ -295,6 +295,7 @@ const Page = () => {
     //   }
 
     return (
+        <Suspense fallback={<div>Loading...</div>}>
         <div className='bg-white h-full lg:h-screen'>
             <div className='fixed'>
 
@@ -436,6 +437,7 @@ const Page = () => {
                 </div>
             </div>
         </div>
+        </Suspense>
     )
 }
 

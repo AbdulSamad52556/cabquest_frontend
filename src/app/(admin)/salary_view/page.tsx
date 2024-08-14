@@ -1,10 +1,9 @@
 'use client'
 import httpClient from '@/app/httpClient'
 import Sidenav from '@/component/admin/side_nav/sidenav'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Toaster, toast } from 'sonner'
-
 
 interface Driver {
     id: number;
@@ -23,7 +22,6 @@ const Page: React.FC = () => {
     const [driverid, setDriverid] = useState<number>(0);
     const [alert, setAlert] = useState<string>('');
     const [deduction, setDeduction] = useState<number>(0);
-
 
     useEffect(() => {
         const driver_id = searchParams.get('driver_id');
@@ -87,6 +85,7 @@ const Page: React.FC = () => {
       };
 
     return (
+        <Suspense fallback={<div>Loading...</div>}>
         <div className='bg-white flex'>
             <Toaster position='top-right' richColors/>
             <div>
@@ -144,7 +143,7 @@ const Page: React.FC = () => {
                 </div>
             </div>
         </div>
-
+        </Suspense>
     )
 }
 

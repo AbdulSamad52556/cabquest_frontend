@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import image from '../../../../public/static/WhatsApp_Image_2024-06-05_at_23.43.42_16f84c9f-removebg-preview.png'
@@ -39,6 +39,8 @@ const Page = () => {
   }
 
   return (
+    <Suspense fallback={<div>Loading...</div>}>
+
     <div className='bg-primary min-h-screen'>
 
       <nav className="mx-auto flex max-w-full items-center justify-between p-4 lg:px-8" aria-label="Global">
@@ -73,6 +75,8 @@ const Page = () => {
         </div>
       </div>
     </div>
+    </Suspense>
+
   )
 }
 
