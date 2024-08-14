@@ -50,7 +50,6 @@ const Page: React.FC = () => {
             'rideid': id,
             'date': date,
             'fare': fare
-
         }
         try {
             const response = await httpClient.post('ride/sendsalary', data);
@@ -62,6 +61,7 @@ const Page: React.FC = () => {
             toast.error('Failed to send salary');
         }
     };
+
     const deductamount = async (e: React.MouseEvent<HTMLAnchorElement>, id: any, date: Date, fare: any) => {
         e.preventDefault()
         const data = {
@@ -69,7 +69,6 @@ const Page: React.FC = () => {
             'rideid': id,
             'date': date,
             'fare': fare
-
         }
         const response = await httpClient.post('ride/deductamount', data)
         if (response.data['message'] === 'success') {
@@ -80,17 +79,17 @@ const Page: React.FC = () => {
 
     const formatDate = (dateString: Date) => {
         const date = new Date(dateString);
-
         return date.toLocaleDateString('en-GB');
     };
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <div className='bg-white flex'>
-                <Toaster position='top-right' richColors />
-                <div>
-                    <Sidenav />
-                </div>
+        <div className='bg-white flex'>
+            <Toaster position='top-right' richColors />
+            <div>
+                <Sidenav />
+            </div>
+            <Suspense fallback={<div>Loading...</div>}>
+
                 <div className=" bg-gray-100 p-8 w-full ">
                     <div className=" bg-white p-6 rounded-lg shadow-md">
                         <h1 className="text-3xl font-bold mb-6 text-gray-800">Salary Information</h1>
@@ -142,8 +141,10 @@ const Page: React.FC = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </Suspense>
+
+            </Suspense>
+
+        </div>
     )
 }
 

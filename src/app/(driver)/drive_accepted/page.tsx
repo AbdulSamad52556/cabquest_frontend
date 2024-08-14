@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState, Suspense  } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import Header from '@/component/driver/driver_header/header'
 import { jwtDecode } from 'jwt-decode'
 import httpClient from '@/app/httpClient'
@@ -7,7 +7,6 @@ import { LoadScript, GoogleMap, Marker, useJsApiLoader, DirectionsRenderer } fro
 import { PhoneIcon, ChatIcon } from '@heroicons/react/solid';
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import { useSearchParams } from 'next/navigation'
 import { getDistance } from 'geolib';
 import { Toaster, toast } from 'sonner'
 
@@ -32,7 +31,6 @@ const Page = () => {
     const [rideid, setRideid] = useState(0)
     const [isLoading, setIsLoading] = useState(true);
     const [center, setCenter] = useState({ lat: 0, lng: 0 });
-    const searchParams = useSearchParams()
     const [phone, setPhone] = useState('')
     const navigate = useRouter()
     const [otp2, setOtp2] = useState('')
@@ -89,29 +87,29 @@ const Page = () => {
     useEffect(() => {
         try {
             if (typeof window !== 'undefined') {
-            const token = localStorage.getItem('daccessToken');
-            if (token) {
-                const decodedToken = jwtDecode(token);
-                const email = decodedToken.sub;
-                setEmail(email)
-                const getride = async () => {
-                    const response = await httpClient.post('ride/getride', { 'email': email })
-                    if (response.data['message'] === 'okkk') {
-                        setRideid(response.data['ride']['id'])
-                        setPrice(response.data['ride']['fare'])
-                        setCurrentlocation(response.data['ride']['current_location'])
-                        setPickup(response.data['ride']['pick_up_location'])
-                        setDestination(response.data['ride']['drop_location'])
-                        setPickupkm(parseFloat(response.data['ride']['pickupkm']))
-                        setTotalkm(parseFloat(response.data['ride']['total_km']))
-                        setPhone(response.data['ride']['phone'])
-                    }
+                const token = localStorage.getItem('daccessToken');
+                if (token) {
+                    const decodedToken = jwtDecode(token);
+                    const email = decodedToken.sub;
+                    setEmail(email)
+                    const getride = async () => {
+                        const response = await httpClient.post('ride/getride', { 'email': email })
+                        if (response.data['message'] === 'okkk') {
+                            setRideid(response.data['ride']['id'])
+                            setPrice(response.data['ride']['fare'])
+                            setCurrentlocation(response.data['ride']['current_location'])
+                            setPickup(response.data['ride']['pick_up_location'])
+                            setDestination(response.data['ride']['drop_location'])
+                            setPickupkm(parseFloat(response.data['ride']['pickupkm']))
+                            setTotalkm(parseFloat(response.data['ride']['total_km']))
+                            setPhone(response.data['ride']['phone'])
+                        }
 
+                    }
+                    getride();
+                    setIsLoading(false)
                 }
-                getride();
-                setIsLoading(false)
             }
-        }
         } catch {
 
         }
@@ -271,7 +269,7 @@ const Page = () => {
                     const email = decodedToken.sub;
                     const response1 = await httpClient.post('ride/getride', { 'email': email })
                     console.log(response1.data)
-                    if (response1.data['message'] === 'not found'){
+                    if (response1.data['message'] === 'not found') {
                         navigate.push('/user_cancelled')
                     }
                     const response = await httpClient.post('ride/checkusercancelled', { 'rideid': response1.data['ride']['id'], })
@@ -297,147 +295,147 @@ const Page = () => {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-        <div className='bg-white h-full lg:h-screen'>
-            <div className='fixed'>
+            <div className='bg-white h-full lg:h-screen'>
+                <div className='fixed'>
 
-                <Toaster position='top-right' richColors />
-            </div>
-
-            <div className='bg-secondary'>
-                <Header />
-            </div>
-            {cancelform && (
-                <div className="fixed flex justify-center items-center z-50 w-full h-1/2 ">
-                    <div className='bg-white p-10 rounded-md flex flex-col'>
-                        <button className='text-black self-end' onClick={() => setCancelform(false)}> ✗</button>
-                        <div className='text-center w-full'>
-                            <h1 className='text-black text-center p-2 text-xl font-bold'>Enter your reason</h1>
-                        </div>
-                        <div className='text-center w-full py-4'>
-                            <input type="text" className='p-2 w-full text-black focus:outline-none bg-gray-300 rounded-md' onChange={(e) => setReason(e.target.value)} />
-                        </div>
-                        <div className='text-center w-full py-4'>
-                            <button className='bg-black py-2 px-10 w-full rounded-md' onClick={cancelRequest}>Submit</button>
-                        </div>
-                    </div>
+                    <Toaster position='top-right' richColors />
                 </div>
-            )}
-            <div className='w-full flex flex-col lg:flex-row'>
-                {otpform && (
+
+                <div className='bg-secondary'>
+                    <Header />
+                </div>
+                {cancelform && (
                     <div className="fixed flex justify-center items-center z-50 w-full h-1/2 ">
                         <div className='bg-white p-10 rounded-md flex flex-col'>
+                            <button className='text-black self-end' onClick={() => setCancelform(false)}> ✗</button>
                             <div className='text-center w-full'>
-                                <h1 className='text-black text-center p-2 text-xl font-bold'>Enter otp</h1>
+                                <h1 className='text-black text-center p-2 text-xl font-bold'>Enter your reason</h1>
                             </div>
                             <div className='text-center w-full py-4'>
-                                <input type="number" className='p-2 w-full text-black focus:outline-none bg-gray-300 rounded-md' onChange={(e) => setOtp2(e.target.value)} />
+                                <input type="text" className='p-2 w-full text-black focus:outline-none bg-gray-300 rounded-md' onChange={(e) => setReason(e.target.value)} />
                             </div>
                             <div className='text-center w-full py-4'>
-                                <button className='bg-black py-2 px-10 w-full rounded-md' onClick={confirmarrive}>Submit</button>
+                                <button className='bg-black py-2 px-10 w-full rounded-md' onClick={cancelRequest}>Submit</button>
                             </div>
                         </div>
                     </div>
                 )}
-                <div className='w-full justify-center lg:w-1/2 h-full bg-white p-10'>
-                    {isLoading ? (
-                        <div className='animate-pulse'>
-                            <div className='bg-white rounded-md shadow-md p-4 mb-4'>
-                                <h1 className='text-transparent bg-gray-200 h-8 mb-2 rounded-md'></h1>
-                                <div className='mb-2'>
-                                    <h1 className='text-transparent bg-gray-200 h-6'></h1>
+                <div className='w-full flex flex-col lg:flex-row'>
+                    {otpform && (
+                        <div className="fixed flex justify-center items-center z-50 w-full h-1/2 ">
+                            <div className='bg-white p-10 rounded-md flex flex-col'>
+                                <div className='text-center w-full'>
+                                    <h1 className='text-black text-center p-2 text-xl font-bold'>Enter otp</h1>
                                 </div>
-                                <div className='mb-2'>
-                                    <h1 className='text-transparent bg-gray-200 h-6'></h1>
+                                <div className='text-center w-full py-4'>
+                                    <input type="number" className='p-2 w-full text-black focus:outline-none bg-gray-300 rounded-md' onChange={(e) => setOtp2(e.target.value)} />
                                 </div>
-                                <div className='mb-4'>
-                                    <h1 className='text-transparent bg-gray-200 h-6'></h1>
-                                </div>
-                            </div>
-                            <div className='bg-white p-4 rounded-md shadow-md mb-4'>
-                                <h1 className='text-transparent bg-gray-200 h-6'></h1>
-                            </div>
-                            <div className='flex justify-center gap-4 mb-4'>
-                                <div className='bg-white p-2 rounded-md shadow-md'>
-                                    <button className='text-transparent bg-gray-200 h-8 w-20 rounded-md'></button>
-                                </div>
-                                <div className='bg-white p-2 rounded-md shadow-md'>
-                                    <div className='text-transparent bg-gray-200 h-8 w-8 rounded-full'></div>
-                                </div>
-                                <div className='bg-white p-2 rounded-md shadow-md'>
-                                    <div className='text-transparent bg-gray-200 h-8 w-8 rounded-full'></div>
-                                </div>
-                            </div>
-                            <div className='p-2 bg-black rounded-lg'>
-                                <button className='text-transparent bg-gray-800 h-10 w-full rounded-lg'></button>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className='bg-gray-300 px-6 py-4 text-center rounded-md shadow-md'>
-                            <div className='bg-white rounded-md shadow-md hover:shadow-xl transition duration-300 p-4'>
-                                <h1 className='text-black text-center text-lg font-semibold mb-4'>₹ {price}</h1>
-                                <div className='mb-2'>
-                                    <h1 className='text-gray-800 text-sm'>To Pickup: {pickupkm} km</h1>
-                                </div>
-                                <div className='mb-2'>
-                                    <h1 className='text-gray-800 text-sm'>To Destination: {totalkm} km</h1>
-                                </div>
-                                <div className='mb-2'>
-                                    <h1 className='text-gray-800 text-sm'>Total Distance: {(parseFloat(pickupkm.toString()) + parseFloat(totalkm.toString())).toFixed(2)} km</h1>
-                                </div>
-                            </div>
-                            <div className='py-2'>
-                                <div className='bg-white p-4 rounded-md hover:shadow-xl transition duration-300 shadow-md'>
-                                    <h1 className='text-gray-800 text-sm'>Pickup Location: {pickup}</h1>
-                                </div>
-                            </div>
-
-                            <div className='flex justify-center gap-4'>
-                                <div className='bg-white text-black text-sm shadow-md hover:shadow-xl transition duration-300 p-2 rounded-md' onClick={() => setCancelform(true)}>
-                                    <button>cancel</button>
-                                </div>
-                                <div className='bg-white p-2 rounded-md shadow-md hover:shadow-xl transition duration-300' onClick={handleClick}>
-                                    <PhoneIcon className="z-0 right-2 top-2.5 h-5 w-5 text-gray-800" />
-                                </div>
-                                <div className='bg-white p-2 rounded-md shadow-md hover:shadow-xl transition duration-300' onClick={() => navigate.push('/chat1')}>
-                                    <ChatIcon className="z-0 right-2 top-2.5 h-5 w-5 text-gray-800" />
-                                </div>
-                            </div>
-                            <div className='mt-4'>
-                                <div className='p-2 bg-black rounded-lg hover:bg-gray-800 transition duration-300' onClick={arrived}>
-                                    <button className='text-white font-semibold px-2 '>Arrived</button>
+                                <div className='text-center w-full py-4'>
+                                    <button className='bg-black py-2 px-10 w-full rounded-md' onClick={confirmarrive}>Submit</button>
                                 </div>
                             </div>
                         </div>
                     )}
+                    <div className='w-full justify-center lg:w-1/2 h-full bg-white p-10'>
+                        {isLoading ? (
+                            <div className='animate-pulse'>
+                                <div className='bg-white rounded-md shadow-md p-4 mb-4'>
+                                    <h1 className='text-transparent bg-gray-200 h-8 mb-2 rounded-md'></h1>
+                                    <div className='mb-2'>
+                                        <h1 className='text-transparent bg-gray-200 h-6'></h1>
+                                    </div>
+                                    <div className='mb-2'>
+                                        <h1 className='text-transparent bg-gray-200 h-6'></h1>
+                                    </div>
+                                    <div className='mb-4'>
+                                        <h1 className='text-transparent bg-gray-200 h-6'></h1>
+                                    </div>
+                                </div>
+                                <div className='bg-white p-4 rounded-md shadow-md mb-4'>
+                                    <h1 className='text-transparent bg-gray-200 h-6'></h1>
+                                </div>
+                                <div className='flex justify-center gap-4 mb-4'>
+                                    <div className='bg-white p-2 rounded-md shadow-md'>
+                                        <button className='text-transparent bg-gray-200 h-8 w-20 rounded-md'></button>
+                                    </div>
+                                    <div className='bg-white p-2 rounded-md shadow-md'>
+                                        <div className='text-transparent bg-gray-200 h-8 w-8 rounded-full'></div>
+                                    </div>
+                                    <div className='bg-white p-2 rounded-md shadow-md'>
+                                        <div className='text-transparent bg-gray-200 h-8 w-8 rounded-full'></div>
+                                    </div>
+                                </div>
+                                <div className='p-2 bg-black rounded-lg'>
+                                    <button className='text-transparent bg-gray-800 h-10 w-full rounded-lg'></button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className='bg-gray-300 px-6 py-4 text-center rounded-md shadow-md'>
+                                <div className='bg-white rounded-md shadow-md hover:shadow-xl transition duration-300 p-4'>
+                                    <h1 className='text-black text-center text-lg font-semibold mb-4'>₹ {price}</h1>
+                                    <div className='mb-2'>
+                                        <h1 className='text-gray-800 text-sm'>To Pickup: {pickupkm} km</h1>
+                                    </div>
+                                    <div className='mb-2'>
+                                        <h1 className='text-gray-800 text-sm'>To Destination: {totalkm} km</h1>
+                                    </div>
+                                    <div className='mb-2'>
+                                        <h1 className='text-gray-800 text-sm'>Total Distance: {(parseFloat(pickupkm.toString()) + parseFloat(totalkm.toString())).toFixed(2)} km</h1>
+                                    </div>
+                                </div>
+                                <div className='py-2'>
+                                    <div className='bg-white p-4 rounded-md hover:shadow-xl transition duration-300 shadow-md'>
+                                        <h1 className='text-gray-800 text-sm'>Pickup Location: {pickup}</h1>
+                                    </div>
+                                </div>
 
-                </div>
-                <div className='w-full lg:w-1/2 bg-white shadow-lg'>
-                    <div className='p-10'>
-                        <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!} libraries={['places']}>
-                            <GoogleMap
-                                center={center}
-                                zoom={15}
-                                mapContainerStyle={{ height: `350px`, width: '100%' }}
-                                options={{ zoomControl: false, streetViewControl: false }}
-                            >
-                                <Marker position={center} />
-                                {directionsResponse && (<DirectionsRenderer
-                                    directions={directionsResponse}
-                                    options={{
-                                        polylineOptions: {
-                                            strokeColor: '#0077B6',
-                                            strokeWeight: 4,
+                                <div className='flex justify-center gap-4'>
+                                    <div className='bg-white text-black text-sm shadow-md hover:shadow-xl transition duration-300 p-2 rounded-md' onClick={() => setCancelform(true)}>
+                                        <button>cancel</button>
+                                    </div>
+                                    <div className='bg-white p-2 rounded-md shadow-md hover:shadow-xl transition duration-300' onClick={handleClick}>
+                                        <PhoneIcon className="z-0 right-2 top-2.5 h-5 w-5 text-gray-800" />
+                                    </div>
+                                    <div className='bg-white p-2 rounded-md shadow-md hover:shadow-xl transition duration-300' onClick={() => navigate.push('/chat1')}>
+                                        <ChatIcon className="z-0 right-2 top-2.5 h-5 w-5 text-gray-800" />
+                                    </div>
+                                </div>
+                                <div className='mt-4'>
+                                    <div className='p-2 bg-black rounded-lg hover:bg-gray-800 transition duration-300' onClick={arrived}>
+                                        <button className='text-white font-semibold px-2 '>Arrived</button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
-                                        },
-                                    }}
-                                />
-                                )}
+                    </div>
+                    <div className='w-full lg:w-1/2 bg-white shadow-lg'>
+                        <div className='p-10'>
+                            <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_REACT_APP_GOOGLE_MAPS_API_KEY!} libraries={['places']}>
+                                <GoogleMap
+                                    center={center}
+                                    zoom={15}
+                                    mapContainerStyle={{ height: `350px`, width: '100%' }}
+                                    options={{ zoomControl: false, streetViewControl: false }}
+                                >
+                                    <Marker position={center} />
+                                    {directionsResponse && (<DirectionsRenderer
+                                        directions={directionsResponse}
+                                        options={{
+                                            polylineOptions: {
+                                                strokeColor: '#0077B6',
+                                                strokeWeight: 4,
 
-                            </GoogleMap></LoadScript>
+                                            },
+                                        }}
+                                    />
+                                    )}
+
+                                </GoogleMap></LoadScript>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </Suspense>
     )
 }
