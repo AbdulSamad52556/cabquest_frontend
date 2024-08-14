@@ -13,31 +13,37 @@ interface Driver {
     km: number;
     payment_type: string;
     fare: number;
-    date: Date;
-    salary_status: string;
+    date: Date; 
+    salary_status: string | null; 
 }
 
 const Page: React.FC = () => {
     const [drivers, setDrivers] = useState<Driver[]>([]);
-    const searchParams = useSearchParams()
-    const [driverid, setDriverid] = useState(0)
-    const [alert, setAlert] = useState('')
-    const [deduction, setDeduction] = useState(0)
+    const searchParams = useSearchParams();
+    const [driverid, setDriverid] = useState<number>(0);
+    const [alert, setAlert] = useState<string>('');
+    const [deduction, setDeduction] = useState<number>(0);
 
 
     useEffect(() => {
-        const driver_id = searchParams.get('driver_id')
+        const driver_id = searchParams.get('driver_id');
         if (driver_id !== null) {
             setDriverid(parseInt(driver_id, 10));
-          } 
-        const getdata = async () => {
-            const response = await httpClient.post('ride/getdata', { 'driver_id': driver_id })
-            console.log(response.data)
-            setDeduction(response.data[response.data.length - 1])
-            setDrivers(response.data)
         }
+
+        const getdata = async () => {
+            try {
+                const response = await httpClient.post('ride/getdata', { 'driver_id': driver_id });
+                console.log(response.data);
+                setDeduction(response.data[response.data.length - 1]);
+                setDrivers(response.data);
+            } catch (error) {
+                toast.error('Failed to fetch data');
+            }
+        };
+
         getdata();
-    }, [alert, searchParams])
+    }, [alert, searchParams]);
 
     const sendsalary = async (e: React.MouseEvent<HTMLAnchorElement>, id: any, date: Date, fare: any) => {
         e.preventDefault()
@@ -48,14 +54,16 @@ const Page: React.FC = () => {
             'fare': fare
 
         }
-        console.log(data)
-        const response = await httpClient.post('ride/sendsalary', data)
-        if (response.data['message'] === 'success'){
-            setAlert('alerted')
-            toast.success( 'salary credited');
+        try {
+            const response = await httpClient.post('ride/sendsalary', data);
+            if (response.data['message'] === 'success') {
+                setAlert('alerted');
+                toast.success('Salary credited');
+            }
+        } catch (error) {
+            toast.error('Failed to send salary');
         }
-    }
-
+    };
     const deductamount = async (e: React.MouseEvent<HTMLAnchorElement>, id: any, date: Date, fare: any) => {
         e.preventDefault()
         const data = {
