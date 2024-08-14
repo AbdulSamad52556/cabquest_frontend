@@ -1,6 +1,6 @@
 'use client'
 import Image from 'next/image'
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import image from '../../../../public/static/247ea988-a0d6-4757-bed8-b83cf43b3b55.jpeg'
 import image2 from '../../../../public/static/WhatsApp_Image_2024-06-06_at_10.26.33_b4404c62-removebg-preview.png'
 import dashboard from '../../../../public/static/dashboard.png'
