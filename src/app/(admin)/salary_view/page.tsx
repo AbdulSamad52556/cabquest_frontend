@@ -3,7 +3,7 @@
 
 import httpClient from '@/app/httpClient';
 import Sidenav from '@/component/admin/side_nav/sidenav';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Toaster, toast } from 'sonner';
 
@@ -144,4 +144,12 @@ const Page: React.FC = () => {
     )
 };
 
-export default Page;
+const SalaryViewPage = () => {
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Page />
+      </Suspense>
+    );
+  };
+  
+  export default SalaryViewPage;
