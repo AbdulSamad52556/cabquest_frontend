@@ -38,7 +38,8 @@ const Page: React.FC = () => {
       } else {
         toast.error(response.data['message'])
       }
-    } catch {
+    } catch (err){
+      console.log(err)
       toast.error('something error')
     } finally {
       setLoading(false)
