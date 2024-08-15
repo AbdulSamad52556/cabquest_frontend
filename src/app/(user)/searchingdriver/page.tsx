@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import image from '../../../../public/static/Premium Vector _ People waiting for flight.jpeg'
 import Image from 'next/image'
 import Header2 from '@/component/user/header2/header2'
@@ -51,4 +51,12 @@ const Page = () => {
     )
 }
 
-export default Page
+const SearchingDriverPage = () => {
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Page />
+      </Suspense>
+    );
+  };
+  
+  export default SearchingDriverPage;

@@ -39,7 +39,6 @@ const Page = () => {
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
 
       <div className='bg-primary min-h-screen'>
 
@@ -75,9 +74,16 @@ const Page = () => {
           </div>
         </div>
       </div>
-    </Suspense>
 
   )
 }
 
-export default Page
+const OtpPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Page />
+    </Suspense>
+  );
+};
+
+export default OtpPage;
