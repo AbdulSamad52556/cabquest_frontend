@@ -107,7 +107,7 @@ const Page: React.FC = () => {
   }, [isFormVisible, vehicles, alert, isLoaded, router]);
 
   useEffect(() => {
-    const socket = socketIOClient('http://localhost:9638');
+    const socket = socketIOClient('http://notification.cabquest.quest');
 
     socket.on('connect', () => {
       console.log('Connected to server');

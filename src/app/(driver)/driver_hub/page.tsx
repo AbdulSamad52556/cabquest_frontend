@@ -64,7 +64,7 @@ const Page: React.FC = () => {
   useEffect(() => {
     const initializeSocket = (email: string): (() => void) => {
       try {
-        const socket: Socket = io('http://localhost:9638', {
+        const socket: Socket = io('http://notification.cabquest.quest', {
           query: { email }
         });
 
