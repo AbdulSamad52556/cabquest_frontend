@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const httpClient = axios.create({
-    baseURL: 'https://cabquest.quest/',
+    baseURL: 'https://api.cabquest.quest/',
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
