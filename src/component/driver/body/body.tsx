@@ -70,7 +70,7 @@ const Body = () => {
         try {
             console.log('form data: ', formData)
 
-            const response = await axios.post('http://localhost:9639/driver_kyc', formData, {
+            const response = await axios.post('http://auth.cabquest.quest/driver_kyc', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
