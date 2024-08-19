@@ -91,7 +91,7 @@ const Page: React.FC = () => {
                     onChange={(e) => setFullname(e.target.value)}
                     type="text"
                     name="fullname"
-                    className='peer w-80  text-white border-b-2 outline-none bg-transparent p-2'
+                    className='peer w-80 text-white border-b-2 outline-none bg-transparent p-2'
                     placeholder='FullName'
                     required
                   />
