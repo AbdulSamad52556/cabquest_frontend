@@ -29,7 +29,7 @@ if (typeof window !== 'undefined') {
             // Check if error.response is defined and has a status
             if (error.response && error.response.status === 401 && refreshToken) {
                 try {
-                    const response = await axios.post('http://api.cabquest.quest/auth/refresh', {
+                    const response = await axios.post('https://api.cabquest.quest/auth/refresh', {
                         refresh_token: refreshToken
                     });
 
