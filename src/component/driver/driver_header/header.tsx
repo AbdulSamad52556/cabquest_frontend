@@ -7,8 +7,7 @@ import image2 from '../../../../public/static/bell.png'
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode'
 import httpClient from '@/app/httpClient'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster, toast } from 'sonner'
 
 const Header = () => {
   const navigate = useRouter();
@@ -28,7 +27,7 @@ const Header = () => {
     const checknotificationpending = async () => {
       const response = await httpClient.post('booking/checknotificationpending', { 'email': email })
       if (response.data['message'] === 'pending') {
-        toast('A request is pending', { type: 'warning', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+        toast.warning('A request is pending')
       } else if (response.data['message'] === 'ok') {
         const loc = { latitude: null, longitude: null }
         const response = await httpClient.post('auth/makeinactive', { email, loc })
@@ -53,7 +52,9 @@ const Header = () => {
 
   return (
     <nav className="mx-auto flex max-w-full items-center justify-between p-4 lg:px-8" aria-label="Global">
-      <ToastContainer />
+      <div className='fixed'>
+        <Toaster position='top-right' />
+      </div>
       <div className="flex flex-1">
         <Link href="/" className="m-1.5 p-1.5">
           <Image className="h-6 md:h-10 w-auto" src={image} alt="example" />

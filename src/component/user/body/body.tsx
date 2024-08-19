@@ -42,7 +42,7 @@ const Body = () => {
           <h1 className='text-xl md:text-3xl text-center lg:text-4xl xl:text-5xl font-bold'>Why let your car sit idle?<br />
             Rent it out and watch <br />
             your income grow!</h1>
-          <Link href={'/'}><button className='bg-primary text-white text-center px-4 py-2 md:px-10 md:py-2 lg:px-14 lg:py-4 text-sm rounded-md'>Book Now</button></Link>
+          <Link href={'/'}><button className='bg-primary mb-2 text-white text-center px-4 py-2 md:px-10 md:py-2 lg:px-14 lg:py-4 text-sm rounded-md'>Book Now</button></Link>
 
         </div>
 

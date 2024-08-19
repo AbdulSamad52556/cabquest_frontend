@@ -3,9 +3,8 @@ import httpClient from '@/app/httpClient';
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';
 import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { Toaster, toast } from 'sonner'
 import Webcam from 'react-webcam';
-import 'react-toastify/dist/ReactToastify.css';
 import Image from 'next/image';
 
 interface Vehicle {
@@ -48,15 +47,15 @@ const VehicleBody: React.FC = () => {
       try {
         setLoading(true);
         const response = await httpClient.get<Vehicle[]>('auth/vehicle');
-        setVehicles(response.data); 
-        const vehicleNames = response.data.map(vehicle => vehicle.type); 
+        setVehicles(response.data);
+        const vehicleNames = response.data.map(vehicle => vehicle.type);
         setNames(vehicleNames);
         setTimeout(() => {
           setLoading(false);
 
         }, 100);
       } catch (error) {
-        toast('Error fetching vehicles', { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false, });
+        toast.error('Error fetching vehicles');
       }
     };
 
@@ -111,12 +110,12 @@ const VehicleBody: React.FC = () => {
     try {
       const response = await httpClient.post('auth/vehicle', data);
       if (response.data.message === "Successfully added") {
-        toast(response.data.message, { type: 'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+        toast.success(response.data.message);
         setTimeout(() => {
           navigate.push('/verification_pending');
         }, 1000);
       } else {
-        toast(response.data.message, { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.error("Error submitting data:", error);
@@ -137,7 +136,9 @@ const VehicleBody: React.FC = () => {
       <div>
         <h1 className="text-3xl md:text-4xl text-black text-center font-bold">Select Your Vehicle Type</h1>
       </div>
-      <ToastContainer />
+      <div className='fixed'>
+        <Toaster position='top-right' />
+      </div>
       <form action="" onSubmit={submitDoc} className='w-full h-full flex flex-col justify-center items-center gap-5'>
         {loading ?
           (

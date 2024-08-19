@@ -4,11 +4,16 @@ import car from '../../../../public/static/Dream_TradingCard__2_-removebg2-remov
 import sideimg from '../../../../public/static/WhatsApp Image 2024-06-06 at 11.24.54_c20ff507.jpg';
 import location from '../../../../public/static/maps-and-flags.png';
 import destination from '../../../../public/static/destinations.png';
-
+import { useRouter } from 'next/navigation';
 const Banner: React.FC = () => {
+  const navigate = useRouter();
+  const onsubmit = (e:any) =>{
+    e.preventDefault()
+      navigate.push('/ride')
+  }
   return (
     <div className='bg-primary h-4/5 p-5 lg:p-20 flex text-black flex-col lg:flex-row justify-around'>
-      <form>
+      <form onSubmit={onsubmit}>
         <div className='flex flex-col gap-5 font-fontFamily items-center p-5'>
           <Image src={sideimg} alt='sideimg' className='h-20 lg:h-auto w-80 md:w-96' />
           <div className="relative">

@@ -2,8 +2,7 @@
 import httpClient from '@/app/httpClient'
 import { jwtDecode } from 'jwt-decode'
 import React, { useState, useEffect } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster, toast } from 'sonner'
 import { ViewGridIcon } from '@heroicons/react/solid';
 import { useRouter } from 'next/navigation'
 import { isCancel } from 'axios'
@@ -59,7 +58,7 @@ const Notification: React.FC = () => {
           setNotifications(response.data['message'])
           setSpin(false)
         } catch (error) {
-          toast((error as Error).message, { type: 'warning', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+          toast.warning((error as Error).message)
         }
       }
     }
@@ -116,7 +115,7 @@ const Notification: React.FC = () => {
 
   const cancelRequest = async () => {
     if (bookingid === 0 || reason === '') {
-      toast('reason is not valid', { type: 'warning', theme: 'dark', hideProgressBar: true, pauseOnHover: false })
+      toast.warning('reason is not valid')
       return
     }
 
@@ -124,11 +123,11 @@ const Notification: React.FC = () => {
       const response = await httpClient.post('booking/cancelrequest', { id: bookingid, email: driverEmail, user_id: userId, reason: reason });
       if (response.data['message'] === 'cancelled successful') {
         setCancelForm(false)
-        toast(response.data['message'], { type: 'warning', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+        toast.warning(response.data['message']);
       }
     } catch (error) {
       console.error('Error cancelling request:', error);
-      toast('Failed to cancel the request', { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+      toast.error('Failed to cancel the request');
     }
     setAlert('alerted')
   }
@@ -190,7 +189,9 @@ const Notification: React.FC = () => {
           </div>
         </div>
       }
-      <ToastContainer />
+      <div className='fixed'>
+        <Toaster position='top-right' />
+      </div>
       {spin &&
         <div className='fixed z-10 bg-black bg-opacity-0 w-full h-3/4 flex justify-center items-center'>
           <span className="loading loading-spinner loading-lg"></span>

@@ -3,7 +3,7 @@ import React, { useEffect, useState, FormEvent } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import login from '../../../../public/static/login.jpg'
-import { MailIcon, LockClosedIcon } from '@heroicons/react/solid'
+import { MailIcon, LockClosedIcon, LockOpenIcon } from '@heroicons/react/solid'
 import httpClient from '@/app/httpClient'
 import { useRouter } from 'next/navigation'
 import Nav from '@/component/nav/nav'
@@ -15,6 +15,13 @@ const Page: React.FC = () => {
   const [password, setPassword] = useState<string>('')
   const navigate = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
+  const [lock, setLock] = useState<boolean>(true)
+  const [passwordType, setPasswordType] = useState<string>('password')
+
+  const handleLockClick = () => {
+    setLock(!lock);
+    setPasswordType(passwordType === 'password' ? 'text' : 'password');
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
@@ -38,7 +45,7 @@ const Page: React.FC = () => {
       } else {
         toast.error(response.data['message'])
       }
-    } catch (err){
+    } catch (err) {
       console.log(err)
       toast.error('something error')
     } finally {
@@ -47,40 +54,45 @@ const Page: React.FC = () => {
   }
 
   return (
-    <div className='bg-primary min-h-screen'>
+    <div className='bg-primary h-screen'>
       <Nav />
       <div className='flex w-full justify-center align-center h-screen'>
-        <div className='bg-primary w-full lg:w-3/5 h-4/6 sm:m-5 flex flex-col md:flex-row border border-white'>
+        <div className='bg-primary w-full lg:w-3/5 h-4/6 sm:m-5 flex flex-col md:flex-row justify-center md:border md:border-white'>
           <div className='flex flex-col gap-5 w-full md:w-1/2 items-center justify-evenly md:m-3'>
             <h1 className='text-4xl text-white'>LogIn</h1>
             <div className='fixed'>
-              <Toaster position="top-right" />
+              <Toaster position="top-right" richColors />
             </div>
             <form method='POST' onSubmit={handleSubmit}>
               <div className='flex flex-col gap-5'>
                 <div className="relative">
                   <input
                     id='email'
-                    onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     name="email"
-                    className='peer text-white border-b-2 z-1 outline-none bg-transparent p-2'
+                    className='peer w-80  text-white border-b-2 z-1 outline-none bg-transparent p-2'
                     placeholder='Email'
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                   <MailIcon className="absolute z-0 right-2 top-2.5 h-5 w-5 text-gray-400 peer-focus:text-blue-500" />
                 </div>
                 <div className="relative">
                   <input
-                    type="password"
+                    type={passwordType}
                     name='pass'
                     id='pass'
-                    onChange={(e) => setPassword(e.target.value)}
-                    className='peer text-white border-b-2 outline-none bg-transparent p-2'
+                    className='peer w-80  text-white border-b-2 outline-none bg-transparent p-2'
                     placeholder='Password'
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                   />
-                  <LockClosedIcon className="absolute right-2 top-2.5 h-5 w-5 text-gray-400 peer-focus:text-blue-500" />
+                  {lock ? (
+                    <LockClosedIcon onClick={handleLockClick} className="absolute right-2 top-2.5 h-5 w-5 text-gray-400 peer-focus:text-blue-500" />
+                  ) : (
+                    <LockOpenIcon onClick={handleLockClick} className="absolute right-2 top-2.5 h-5 w-5 text-gray-400 peer-focus:text-blue-500" />
+                  )}
+                  
                 </div>
                 {loading ?
                   <div className='bg-white rounded-xl p-2 text-black flex justify-center'>

@@ -68,16 +68,16 @@ const Page: React.FC = () => {
   };
 
   return (
-    <div className='bg-primary min-h-fit overflow-hidden '>
+    <div className='bg-primary h-screen overflow-hidden '>
       <Nav />
-      <div className='flex w-full justify-center align-center h-screen'>
-        <div className='bg-primary w-full md:w-4/5 lg:w-3/5 h-fit sm:m-5 flex flex-col md:flex-row border border-white'>
+      <div className='flex w-full justify-center items-center h-3/4'>
+        <div className='bg-primary w-full md:w-4/5 lg:w-3/5 h-fit sm:m-5 flex flex-col md:flex-row justify-center md:border border-white'>
           <div className='w-full md:w-1/2 items-center justify-center hidden md:block lg:block'>
             <div className="relative w-full h-64 md:h-full">
               <Image src={login} alt='Login Image' layout='fill' objectFit='cover' />
             </div>
           </div>
-          <div className='flex flex-col gap-5 w-full md:w-1/2 p-2 items-center justify-evenly md:m-3'>
+          <div className='flex flex-col gap-5 w-full md:w-1/2 p-2 items-center justify-center md:m-3'>
             <h1 className='text-4xl text-white'>SignUp</h1>
             <div className='fixed'>
               <Toaster position='top-right' />
@@ -91,7 +91,7 @@ const Page: React.FC = () => {
                     onChange={(e) => setFullname(e.target.value)}
                     type="text"
                     name="fullname"
-                    className='peer text-white border-b-2 outline-none bg-transparent p-2'
+                    className='peer w-80  text-white border-b-2 outline-none bg-transparent p-2'
                     placeholder='FullName'
                     required
                   />
@@ -104,7 +104,7 @@ const Page: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     name="email"
-                    className='peer text-white border-b-2 outline-none bg-transparent p-2'
+                    className='peer w-80 text-white border-b-2 outline-none bg-transparent p-2'
                     placeholder='Email'
                     required
                   />
@@ -116,7 +116,7 @@ const Page: React.FC = () => {
                     name='phone'
                     id='phone'
                     onChange={(e) => setPhone(e.target.value)}
-                    className='peer text-white border-b-2 outline-none bg-transparent p-2'
+                    className='peer w-80 text-white border-b-2 outline-none bg-transparent p-2'
                     placeholder='Phone'
                     required
                   />
@@ -128,7 +128,7 @@ const Page: React.FC = () => {
                     name='pass'
                     id='pass'
                     onChange={(e) => setPassword(e.target.value)}
-                    className='peer text-white border-b-2 outline-none bg-transparent p-2'
+                    className='peer w-80 text-white border-b-2 outline-none bg-transparent p-2'
                     placeholder='Password'
                     required
                   />
@@ -144,7 +144,7 @@ const Page: React.FC = () => {
                     name='pass'
                     id='pass'
                     onChange={(e) => setPassword2(e.target.value)}
-                    className='peer text-white border-b-2 outline-none bg-transparent p-2'
+                    className='peer w-80 text-white border-b-2 outline-none bg-transparent p-2'
                     placeholder='Confirm Password'
                   />
                   {lock2 ? (

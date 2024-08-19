@@ -1,13 +1,12 @@
 'use client'
 import Nav from '@/component/nav/nav'
-import { LockClosedIcon, MailIcon, UserCircleIcon, PhoneIcon } from '@heroicons/react/solid'
+import { LockClosedIcon, MailIcon, UserCircleIcon, PhoneIcon, LockOpenIcon } from '@heroicons/react/solid'
 import Image from 'next/image'
 import Link from 'next/link'
 import httpClient from '@/app/httpClient'
 import React, { useState } from 'react'
 import driver from '../../../../public/static/a0c581b016877d23dc870185ad1a9e9e-removebg-preview.png'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster, toast } from 'sonner'
 import { useRouter } from 'next/navigation';
 import image from '../../../../public/static/Eclipse@1x-1.0s-200px-200px (1).gif'
 
@@ -19,7 +18,13 @@ const Page = () => {
     const [message, setMessage] = useState('');
     const navigate = useRouter();
     const [loading, isLoading] = useState(false)
+    const [lock, setLock] = useState<boolean>(true)
+    const [passwordType, setPasswordType] = useState<string>('password')
 
+    const handleLockClick = () => {
+        setLock(!lock);
+        setPasswordType(passwordType === 'password' ? 'text' : 'password');
+    };
 
     const handleSubmit = async (e: { preventDefault: () => void }) => {
         isLoading(true)
@@ -28,7 +33,7 @@ const Page = () => {
 
         const response = await httpClient.post('auth/driver_register', { fullname, email, password, phone });
         if (response.data.message === "A confirmation email has been sent.") {
-            toast(response.data.message, { type: 'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false, });
+            toast.success(response.data.message);
             isLoading(false)
             const timer = setTimeout(() =>{
                 navigate.push('/login_driver')
@@ -36,13 +41,13 @@ const Page = () => {
         }
         else {
             isLoading(false)
-            toast(response.data.message, { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false, });
+            toast.error(response.data.message);
 
         }
         }
         catch{
             isLoading(false)
-            toast('error', { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false, });
+            toast.error('error');
 
         }
 
@@ -50,7 +55,9 @@ const Page = () => {
 
     return (
         <div className='bg-secondary w-full h-screen'>
-            <ToastContainer />
+            <div className='fixed'>
+              <Toaster position="top-right" richColors />
+            </div>
             <Nav />
             <div className='w-full p-5 h-3/4 flex'>
 
@@ -106,7 +113,7 @@ const Page = () => {
                             </div>
                             <div className="relative">
                                 <input
-                                    type="password"
+                                    type={passwordType}
                                     name='pass'
                                     id='pass'
                                     value={password}
@@ -115,7 +122,12 @@ const Page = () => {
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                 />
-                                <LockClosedIcon className="absolute right-2 top-2.5 h-5 w-5 text-gray-400 peer-focus:text-blue-500" />
+                                {lock ? (
+                                    <LockClosedIcon onClick={handleLockClick} className="absolute right-2 top-2.5 h-5 w-5 text-gray-400 peer-focus:text-blue-500" />
+                                ) : (
+                                    <LockOpenIcon onClick={handleLockClick} className="absolute right-2 top-2.5 h-5 w-5 text-gray-400 peer-focus:text-blue-500" />
+                                )}
+                                
                             </div>
                             {loading ?
                                 <button className='bg-secondary-light w-80 flex justify-center items-center rounded-xl p-2'><Image className='w-6' src={image} alt='' /></button>

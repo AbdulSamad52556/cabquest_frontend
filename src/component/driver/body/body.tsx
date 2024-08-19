@@ -2,10 +2,9 @@
 import httpClient from '@/app/httpClient';
 import axios from 'axios';
 import React, { useState, ChangeEvent, useEffect } from 'react';
-import {jwtDecode} from 'jwt-decode';  
-import { toast, ToastContainer } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
+import { Toaster, toast } from 'sonner'
 import { useRouter } from 'next/navigation';
-import 'react-toastify/dist/ReactToastify.css';
 
 const Body = () => {
     const [files, setFiles] = useState<Map<number, File>>(new Map());
@@ -17,7 +16,7 @@ const Body = () => {
 
 
     useEffect(() => {
-        try{
+        try {
 
             const token = localStorage.getItem('daccessToken');
             const fullname = localStorage.getItem('dname');
@@ -27,7 +26,7 @@ const Body = () => {
                 setEmail(decodedToken.sub || '');
             }
         }
-        catch{
+        catch {
             console.log('helllo')
         }
     }, []);
@@ -39,7 +38,7 @@ const Body = () => {
                     const response1 = await httpClient.post('/auth/verify_register', { 'email': email });
                     if (response1.data['message'] === 'registration already recorded') {
                         navigate.push('/select_vehicle');
-                    }else{
+                    } else {
                         setSpin(true)
                     }
                 }
@@ -49,7 +48,7 @@ const Body = () => {
         };
         verify();
         console.log(files)
-    }, [email, navigate,files]);
+    }, [email, navigate, files]);
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
         if (event.target.files && event.target.files.length > 0) {
@@ -60,7 +59,7 @@ const Body = () => {
 
     const submitDoc = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
-        
+
         const formData = new FormData();
 
         files.forEach((file, index) => {
@@ -78,12 +77,12 @@ const Body = () => {
             });
             console.log(response);
             if (response.data.message === "files successfully uploaded" || response.data.message === 'details already recorded') {
-                toast(response.data['message'], { type: 'success', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+                toast.success(response.data['message']);
                 setTimeout(() => {
                     navigate.push('/select_vehicle');
                 }, 1000);
             } else {
-                toast(response.data['message'], { type: 'error', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+                toast.error(response.data['message']);
             }
         } catch (error) {
             console.error("Error uploading files:", error);
@@ -92,12 +91,11 @@ const Body = () => {
 
     if (!spin) {
         return (
-          <div className='bg-white w-full h-screen flex justify-center items-center'>
-          <ToastContainer />
-            <span className="loading loading-spinner loading-lg"></span>
-          </div>
+            <div className='bg-white w-full h-screen flex justify-center items-center'>
+                <span className="loading loading-spinner loading-lg"></span>
+            </div>
         )
-      }
+    }
 
     return (
         <div className="h-full w-full flex flex-col bg-white gap-5 items-center justify-center p-10">
@@ -107,7 +105,9 @@ const Body = () => {
             <div>
                 <h2 className='text-center text-xl font-semibold'>here what you need to do to setup your account</h2>
             </div>
-            <ToastContainer />
+            <div className='fixed'>
+                <Toaster position='top-right' />
+            </div>
             <form onSubmit={submitDoc} className='w-full h-full flex flex-col gap-5 justify-center items-center'>
                 {names.map((name, index) => (
                     <label
