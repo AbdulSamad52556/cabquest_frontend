@@ -32,7 +32,7 @@ const Header = () => {
         const loc = { latitude: null, longitude: null }
         const response = await httpClient.post('auth/makeinactive', { email, loc })
         const response2 = await httpClient.post('ride/liveloc', { 'email': email, 'coords': { 'lat': null, 'lng': null } })
-        if (response.data['message'] === 'ok') {
+        if (response.data['message'] === 'ok' && response2.data['message'] === 'ok') {
           try {
             localStorage.removeItem('daccessToken')
             localStorage.removeItem('drefreshToken')

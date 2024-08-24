@@ -24,6 +24,7 @@ const Page = () => {
 
 
     useEffect(()=>{
+      console.log((typeof window))
       if (typeof window !== 'undefined') {
         try{
             const token = localStorage.getItem('isdriver')

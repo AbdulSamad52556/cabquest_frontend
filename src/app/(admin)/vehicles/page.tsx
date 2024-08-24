@@ -28,7 +28,7 @@ const Page: React.FC = () => {
         if (!isFormVisible) {
             setFetchve(!fetchve)
         }
-    }, [isFormVisible, fetchve])
+    }, [isFormVisible])
 
 
     useEffect(() => {
@@ -36,9 +36,9 @@ const Page: React.FC = () => {
             try {
                 const response = await httpClient.get<Vehicle[]>('auth/vehicle');
                 setVehicles(response.data);
-                setTimeout(() => {
+                // setTimeout(() => {
                     setLoading(false);
-                }, 1000);
+                // }, 1000);
             } catch (error) {
                 console.error('Error fetching vehicles:', error);
             }

@@ -257,7 +257,7 @@ const VehicleBody: React.FC = () => {
             <button onClick={handleOpenCamera} className='bg-secondary-dark text-white px-20 py-2 rounded-md'>Upload Photo</button>}
           {image && (
             <div className='bg-gray-600 rounded-lg text-white p-2 flex'>
-              <Image src={image} alt="Captured" className='rounded-lg' />
+              <Image src={image} alt="Captured" width={500} height={500} className='rounded-lg' />
             </div>
           )}
           {isCameraOpen && (

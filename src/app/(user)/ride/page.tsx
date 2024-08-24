@@ -75,39 +75,56 @@ const Page: React.FC = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-    const getLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setUserLocation({ lat:latitude, lng:longitude });
-            getPlaceName(latitude, longitude);
-            setSpin(true);
-          },
-          (error) => {
-            console.error('Error getting user location:', error);
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
-          }
-        );
+      const getLocation = () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              console.log('Latitude:', latitude, 'Longitude:', longitude);
+              setUserLocation({ lat: latitude, lng: longitude });
+              getPlaceName(latitude, longitude);
+              setSpin(true);
+            },
+            (error) => {
+              switch (error.code) {
+                case error.PERMISSION_DENIED:
+                  toast.error('User denied the request for Geolocation.');
+                  break;
+                case error.POSITION_UNAVAILABLE:
+                  toast.error('Location information is unavailable.');
+                  break;
+                case error.TIMEOUT:
+                  toast.error('The request to get user location timed out.');
+                  break;
+                default:
+                  toast.error('An unknown error occurred.');
+                  break;
+              }
+              setSpin(false);  
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 10000,  
+              maximumAge: 0   
+            }
+          );
+        } else {
+          toast.error('Geolocation is not supported by this browser.');
+        }
+      };
+  
+      if (!localStorage.getItem('accessToken')) {
+        router.push('/login');
       } else {
-        console.error('Geolocation is not supported by this browser.');
+        getLocation();
       }
-    };
-    if (!localStorage.getItem('accessToken')) {
-      router.push('/login');
     }
-    else{
-      getLocation();
-    }
-  }
   }, [isFormVisible, vehicles, alert, isLoaded, router]);
+  
 
   useEffect(() => {
-    const socket = socketIOClient('https://notification.cabquest.quest');
+    // const socket = socketIOClient('https://notification.cabquest.quest');
+    const socket = socketIOClient('http://localhost:9638/');
 
     socket.on('connect', () => {
       console.log('Connected to server');
@@ -157,7 +174,7 @@ const Page: React.FC = () => {
         setIsFormVisible(true);
         setSpin2(false);
       } catch (error) {
-        // toast(error, { type: 'warning', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+        toast.error('Error getting driver');
         setSpin2(false)
         console.error('Error getting driver:', error);
       }
