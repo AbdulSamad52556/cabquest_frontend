@@ -64,15 +64,17 @@ const Page: React.FC = () => {
   useEffect(() => {
     const initializeSocket = (email: string): (() => void) => {
       try {
-        const socket: Socket = io('https://api.cabquest.quest/booking/', {
+        console.log(email,email)
+        const socket = io('http://localhost:9638/', {
           query: { email }
         });
 
         socket.on('connect', () => {
-          console.log('Connected to socket server');
+          console.log('Connected to API');
         });
 
         socket.on('notification', (data: NotificationData) => {
+          console.log('Notification received:', data);
           setMessage(data.message);
           setPrice(data.price);
           setDistance(data.distance);
@@ -117,7 +119,6 @@ const Page: React.FC = () => {
         if (loading) {
           toast.success(loading)
           localStorage.removeItem('dloading');
-          // window.location.reload();
         }
       }
     } catch (error) {

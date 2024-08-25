@@ -10,6 +10,7 @@ import { jwtDecode } from 'jwt-decode';
 import { XIcon } from '@heroicons/react/solid';
 import socketIOClient from 'socket.io-client';
 import { useRouter } from 'next/navigation';
+import io from 'socket.io-client';
 
 interface Location {
   lat: number;
@@ -36,6 +37,7 @@ interface ApiResponse {
 interface Window {
   Razorpay: any;
 }
+
 
 const Page: React.FC = () => {
   const [userLocation, setUserLocation] = useState<Location | null>(null);
@@ -120,28 +122,6 @@ const Page: React.FC = () => {
       }
     }
   }, [isFormVisible, vehicles, alert, isLoaded, router]);
-  
-
-  useEffect(() => {
-    // const socket = socketIOClient('https://notification.cabquest.quest');
-    const socket = socketIOClient('http://localhost:9638/');
-
-    socket.on('connect', () => {
-      console.log('Connected to server');
-    });
-
-    socket.on('price_response', (data: { total?: number; error?: string }) => {
-      if (data.total !== undefined) {
-        setPrice(data.total);
-      } else {
-        console.error('Error calculating price:', data.error);
-      }
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
 
   const handleChildButtonClick = () => {
     if (map && userLocation) {
@@ -192,7 +172,7 @@ const Page: React.FC = () => {
           const response = await httpClient.post('booking/getprice', { vehicle, distance: parseFloat(distance) });
           setPrice(response.data.total);
         } catch (error) {
-          // toast(error, { type: 'warning', theme: 'dark', hideProgressBar: true, pauseOnHover: false });
+          toast.error('Error fetching price');
           setSpin2(false)
           console.error('Error fetching price:', error);
         }
@@ -399,7 +379,6 @@ const Page: React.FC = () => {
                 </div>
               </button></>
             }
-
 
           </div>
         </div>

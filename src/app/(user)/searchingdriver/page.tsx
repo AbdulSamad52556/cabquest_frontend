@@ -24,7 +24,7 @@ const Page = () => {
                     localStorage.setItem('rideid', response.data['rideid'])
                     navigate.push('/pickedup')
                 }
-                else if (response2.data['message'] === 'request is not accepted') {
+                else if (response2.data['message'] === 'driver not available') {
                     navigate.push('/driver_not_available')
                 }
             }

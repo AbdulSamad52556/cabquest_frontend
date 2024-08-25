@@ -69,7 +69,7 @@ const Home: React.FC<HomeProps> = ({ getlocation }) => {
     } else {
       setError('Geolocation is not supported by this browser.');
     }
-  }, [getlocation])
+  }, [])
 
   const startWork = async () => {
     setSpin(true)
