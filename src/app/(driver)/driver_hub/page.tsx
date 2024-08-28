@@ -65,7 +65,7 @@ const Page: React.FC = () => {
     const initializeSocket = (email: string): (() => void) => {
       try {
         console.log(email,email)
-        const socket = io('http://localhost:9638/', {
+        const socket = io('http://booking.cabquest.quest/', {
           query: { email }
         });
 

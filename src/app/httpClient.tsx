@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const httpClient = axios.create({
-    baseURL: 'http://localhost:9637/',
+    baseURL: 'https://api.cabquest.quest/',
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
@@ -26,11 +26,9 @@ if (typeof window !== 'undefined') {
             const originalRequest = error.config;
             const refreshToken = localStorage.getItem('refreshToken') || localStorage.getItem('drefreshToken') || localStorage.getItem('arefreshToken');
 
-            // Check if error.response is defined and has a status
             if (error.response && error.response.status === 401 && refreshToken) {
                 try {
-                    const response = await axios.post('http:/localhost:9637/auth/refresh', {
-                        // const response = await axios.post('https://api.cabquest.quest/auth/refresh', {
+                    const response = await axios.post('https://api.cabquest.quest/auth/refresh', {
                         refresh_token: refreshToken
                     });
 
@@ -38,15 +36,12 @@ if (typeof window !== 'undefined') {
                         const newAccessToken = response.data.accessToken;
                         localStorage.setItem('accessToken', newAccessToken);
 
-                        // Update the original request with the new access token
                         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
-                        // Retry the original request
                         return axios(originalRequest);
                     }
                 } catch (refreshError) {
                     console.error('Failed to refresh token', refreshError);
-                    // Handle refresh token expiration (e.g., redirect to login)
                     localStorage.removeItem('accessToken');
                     localStorage.removeItem('daccessToken');
                     localStorage.removeItem('aaccessToken');
