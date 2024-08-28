@@ -29,15 +29,15 @@ const Page = () => {
     const response = await httpClient.post('auth/verify', data);
 
     if (response.data['message'] === 'Account Created') {
-      const communicationData = response.data['communication'];
-      console.log(communicationData)
-      const response2 = await axios.post('https://communication.cabquest.quest/queue',communicationData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
+      // const communicationData = response.data['communication'];
+      // console.log(communicationData)
+      // const response2 = await axios.post('https://communication.cabquest.quest/queue',communicationData,
+      //   {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //   }
+      // )
       toast.success('Account Created')
       const timer = setTimeout(() => {
         navigate.push('/login');
