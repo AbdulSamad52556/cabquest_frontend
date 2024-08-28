@@ -30,12 +30,12 @@ const Page = () => {
 
     if (response.data['message'] === 'Account Created') {
       const communicationData = response.data['communication'];
+      console.log(communicationData)
       const response2 = await axios.post('https://communication.cabquest.quest/queue',communicationData,
         {
           headers: {
             'Content-Type': 'application/json',
           },
-          withCredentials: true,  // Make sure cookies are sent
         }
       )
       toast.success('Account Created')
