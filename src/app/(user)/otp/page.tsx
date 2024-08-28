@@ -33,8 +33,9 @@ const Page = () => {
       const response2 = await axios.post('https://communication.cabquest.quest/queue',communicationData,
         {
           headers: {
-            'Content-Type': 'application/json',  // Adjust this if you're sending a different type of data
+            'Content-Type': 'application/json',
           },
+          withCredentials: true,  // Make sure cookies are sent
         }
       )
       toast.success('Account Created')
