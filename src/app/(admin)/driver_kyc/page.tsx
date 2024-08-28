@@ -6,6 +6,7 @@ import doc from '../../../../public/static/doc.png'
 import Image from 'next/image';
 import { Toaster, toast } from 'sonner'
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 interface DriverVerification {
   id: number;
@@ -46,13 +47,15 @@ const Page = () => {
   }, [fetchData, reload]);
 
   const handleDownload = async (fileName: string) => {
-    window.open(`http://localhost:9639/${fileName}`, '_blank')
+    window.open(`https://api.cabquest.quest/auth/${fileName}`, '_blank')
     
   };
 
   const onAccept = async (id: number) => {
     try {
       const response = await httpClient.post('auth/accept', { id });
+      const data = response.data['communication']
+      const response2 = await axios.post('https://communication.cabquest.quest/queue',data)
       setReload(prev => !prev); // Toggle the reload state to trigger useEffect
     } catch (error) {
       console.error('Error accepting request:', error);

@@ -7,6 +7,7 @@ import io, { Socket } from 'socket.io-client';
 import { jwtDecode } from 'jwt-decode'
 import httpClient from '@/app/httpClient'
 import { useRouter } from 'next/navigation'
+import axios from 'axios';
 
 interface DecodedToken {
   sub: string;
@@ -65,7 +66,7 @@ const Page: React.FC = () => {
     const initializeSocket = (email: string): (() => void) => {
       try {
         console.log(email,email)
-        const socket = io('http://booking.cabquest.quest/', {
+        const socket = io('https://booking.cabquest.quest/', {
           query: { email }
         });
 
@@ -178,7 +179,9 @@ const Page: React.FC = () => {
             total_km: distance,
             fare: price,
           };
-          await httpClient.post('ride/createride', ridedata);
+          const res = await httpClient.post('ride/createride', ridedata);
+          const data = res.data['communication']
+          const res2 = await axios.post('https://communication.cabquest.quest/queue',data)
           setShowNotification(false);
           router.push('/drive_accepted');
         }}

@@ -8,6 +8,7 @@ import httpClient from '@/app/httpClient';
 import { useRouter } from 'next/navigation'
 import { Toaster, toast } from 'sonner'
 import Payment from '../../../component/razorpay/payment'
+import axios from 'axios';
 
 interface DecodedToken {
     sub: string;
@@ -99,6 +100,9 @@ const Page = () => {
                 const decodedToken = jwtDecode<DecodedToken>(token);
                 const email = decodedToken.sub
                 const response = await httpClient.post('ride/istripstarted', { 'email': email, 'rideid': rideid })
+                if (response.data['message'] === 'driver is cancelled'){
+                    await axios.post('https://communication.cabquest.quest/queue',response.data['communication'])
+                }
                 if (response.data['message'] === 'trip started') {
                     navigate.push('/udestination')
                 }

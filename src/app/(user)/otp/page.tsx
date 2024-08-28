@@ -8,6 +8,7 @@ import httpClient from '@/app/httpClient'
 import { Toaster, toast } from 'sonner'
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation'
+import axios from 'axios';
 
 const Page = () => {
 
@@ -28,6 +29,8 @@ const Page = () => {
     const response = await httpClient.post('auth/verify', data);
 
     if (response.data['message'] === 'Account Created') {
+      const communicationData = response.data['communication'];
+      const response2 = await axios.post('https://communication.cabquest.quest/queue',communicationData)
       toast.success('Account Created')
       const timer = setTimeout(() => {
         navigate.push('/login');
