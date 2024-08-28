@@ -54,12 +54,12 @@ const Page = () => {
   const onAccept = async (id: number) => {
     try {
       const response = await httpClient.post('auth/accept', { id });
-      const data = response.data['communication']
-      const response2 = await axios.post('https://communication.cabquest.quest/queue',data,{
-        headers: {
-          'Content-Type': 'application/json',  // Adjust this if you're sending a different type of data
-        },
-      })
+      // const data = response.data['communication']
+      // const response2 = await axios.post('https://communication.cabquest.quest/queue',data,{
+      //   headers: {
+      //     'Content-Type': 'application/json',  // Adjust this if you're sending a different type of data
+      //   },
+      // })
       setReload(prev => !prev); // Toggle the reload state to trigger useEffect
     } catch (error) {
       console.error('Error accepting request:', error);
