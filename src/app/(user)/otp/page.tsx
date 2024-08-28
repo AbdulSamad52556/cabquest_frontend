@@ -30,7 +30,13 @@ const Page = () => {
 
     if (response.data['message'] === 'Account Created') {
       const communicationData = response.data['communication'];
-      const response2 = await axios.post('https://communication.cabquest.quest/queue',communicationData)
+      const response2 = await axios.post('https://communication.cabquest.quest/queue',communicationData,
+        {
+          headers: {
+            'Content-Type': 'application/json',  // Adjust this if you're sending a different type of data
+          },
+        }
+      )
       toast.success('Account Created')
       const timer = setTimeout(() => {
         navigate.push('/login');

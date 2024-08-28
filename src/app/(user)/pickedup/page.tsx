@@ -101,7 +101,11 @@ const Page = () => {
                 const email = decodedToken.sub
                 const response = await httpClient.post('ride/istripstarted', { 'email': email, 'rideid': rideid })
                 if (response.data['message'] === 'driver is cancelled'){
-                    await axios.post('https://communication.cabquest.quest/queue',response.data['communication'])
+                    await axios.post('https://communication.cabquest.quest/queue',response.data['communication'],{
+                        headers: {
+                          'Content-Type': 'application/json',  // Adjust this if you're sending a different type of data
+                        },
+                      })
                 }
                 if (response.data['message'] === 'trip started') {
                     navigate.push('/udestination')
