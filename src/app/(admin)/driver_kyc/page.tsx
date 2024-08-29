@@ -47,7 +47,7 @@ const Page = () => {
   }, [fetchData, reload]);
 
   const handleDownload = async (fileName: string) => {
-    window.open(`https://api.cabquest.quest/auth/${fileName}`, '_blank')
+    window.open(`${fileName}`, '_blank')
     
   };
 
