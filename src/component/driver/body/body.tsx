@@ -77,7 +77,7 @@ const Body = () => {
                 }
             });
             console.log(response);
-            if (response.data.message === "files successfully uploaded" || response.data.message === 'details already recorded') {
+            if (response.data.message === "Files successfully uploaded" || response.data.message === 'details already recorded') {
                 toast.success(response.data['message']);
                 setTimeout(() => {
                     navigate.push('/select_vehicle');
