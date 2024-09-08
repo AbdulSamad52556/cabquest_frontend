@@ -9,6 +9,7 @@ import httpClient from '@/app/httpClient';
 import { ArrowCircleRightIcon } from '@heroicons/react/solid';
 
 
+// const socket = io('http://localhost:9641');
 const socket = io('https://communication.cabquest.quest');
 
 interface DecodedToken {

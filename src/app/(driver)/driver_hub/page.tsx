@@ -66,7 +66,8 @@ const Page: React.FC = () => {
     const initializeSocket = (email: string): (() => void) => {
       try {
         console.log(email,email)
-        const socket = io('https://booking.cabquest.quest/', {
+        // const socket = io('http://localhost:9638/', {
+          const socket = io('https://booking.cabquest.quest/', {
           query: { email }
         });
 
@@ -181,7 +182,8 @@ const Page: React.FC = () => {
           };
           const res = await httpClient.post('ride/createride', ridedata);
           const data = res.data['communication']
-          const res2 = await axios.post('https://communication.cabquest.quest/queue',data,{
+          // const res2 = await axios.post('http://localhost:9641/queue',data,{
+            const res2 = await axios.post('https://communication.cabquest.quest/queue',data,{
             headers: {
               'Content-Type': 'application/json',  // Adjust this if you're sending a different type of data
             },
