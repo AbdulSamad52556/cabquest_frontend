@@ -108,6 +108,9 @@ const Page: React.FC = () => {
           const cleanupSocket = initializeSocket(email);
           return cleanupSocket;
         }
+        else{
+          router.push('/driver_login')
+        }
       }
     } catch (error) {
       console.error(error);
