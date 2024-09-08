@@ -84,11 +84,11 @@ const Home: React.FC<HomeProps> = ({ getlocation }) => {
         setActive(true)
         localStorage.setItem('isactive', 'true')
         toast.success('work started')
+        setSpin(false)
         const response2 = await httpClient.post('ride/liveloc', {  email: email,  coords: { lat: location.latitude, lng: location.longitude}})
         console.log(response2.data['message'])
       }
     }
-    setSpin(false)
   }
 
   const stopWork = async () => {
