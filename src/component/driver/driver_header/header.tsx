@@ -16,9 +16,15 @@ const Header = () => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('daccessToken');
-      const decodedToken = jwtDecode<any>(token || '');
-      const email = decodedToken.sub;
-      setEmail(email)
+      if (token){
+
+        const decodedToken = jwtDecode<any>(token || '');
+        const email = decodedToken.sub;
+        setEmail(email)
+      }
+      else{
+        navigate.push('/login_driver')
+      }
     }
   }, [navigate])
 

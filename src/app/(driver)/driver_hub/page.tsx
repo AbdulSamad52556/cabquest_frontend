@@ -109,7 +109,7 @@ const Page: React.FC = () => {
           return cleanupSocket;
         }
         else{
-          router.push('/driver_login')
+          router.push('/login_driver')
         }
       }
     } catch (error) {
