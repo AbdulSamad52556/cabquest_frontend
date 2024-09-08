@@ -80,12 +80,12 @@ const Home: React.FC<HomeProps> = ({ getlocation }) => {
 
       const response = await httpClient.post('auth/makeactive', { email, location })
       console.log(response.data['message'])
-      const response2 = await httpClient.post('ride/liveloc', {  email: email,  coords: { lat: location.latitude, lng: location.longitude}})
-      console.log(response2.data['message'])
       if (response.data['message'] === 'ok') {
         setActive(true)
         localStorage.setItem('isactive', 'true')
         toast.success('work started')
+        const response2 = await httpClient.post('ride/liveloc', {  email: email,  coords: { lat: location.latitude, lng: location.longitude}})
+        console.log(response2.data['message'])
       }
     }
     setSpin(false)
