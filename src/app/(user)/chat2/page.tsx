@@ -7,7 +7,7 @@ import image from '../../../../public/static/WhatsApp_Image_2024-06-05_at_23.43.
 import { jwtDecode } from 'jwt-decode';
 import httpClient from '@/app/httpClient';
 import { ArrowCircleRightIcon } from '@heroicons/react/solid';
-
+import axios from 'axios';
 
 // const socket = io('http://localhost:9641');
 const socket = io('https://communication.cabquest.quest');
@@ -41,13 +41,13 @@ const UserChat = () => {
       const decodedToken = jwtDecode<DecodedToken>(token);
       const email = decodedToken.sub;
       const getrideid = async () => {
-        const response = await httpClient.post('communication/getrideid2', { 'email': email })
+        const response = await axios.post('https://communication.cabquest.quest/getrideid2', { 'email': email })
         setDriverid(response.data['driverid'])
         setUserid(response.data['userid'])
         setRideid(response.data['rideid'])
         setRoom(response.data['rideid'])
         setName(response.data['name'])
-        const response2 = await httpClient.get(`communication/messages/${response.data['rideid']}`)
+        const response2 = await axios.get(`https://communication.cabquest.quest/messages/${response.data['rideid']}`)
         setMessages(response2.data)
       }
       getrideid();
