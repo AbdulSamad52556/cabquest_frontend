@@ -99,13 +99,16 @@ const Home: React.FC<HomeProps> = ({ getlocation }) => {
       const email = decodedToken.sub;
 
       const response1 = await httpClient.post('booking/checknotificationpending', { email })
+      console.log(response1.data)
       if (response1.data['message'] === 'pending') {
         toast.warning('A request is pending')
       } else if (response1.data['message'] === 'ok') {
 
         const loc = { latitude: null, longitude: null }
         const response = await httpClient.post('auth/makeinactive', { email, loc })
+        console.log(response.data)
         const response2 = await httpClient.post('ride/liveloc', { 'email':email, 'coords':{'lat':null, 'lng':null} })
+        console.log(response2.data)
         if (response.data['message'] === 'ok' && response2.data['message'] === 'ok') {
           setActive(false)
           localStorage.removeItem('isactive')
