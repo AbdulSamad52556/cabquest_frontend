@@ -111,12 +111,12 @@ const Home: React.FC<HomeProps> = ({ getlocation }) => {
           setActive(false)
           localStorage.removeItem('isactive')
           toast.success('duty stopped')
+          setSpin(false)
           const response2 = await httpClient.post('ride/liveloc', { 'email':email, 'coords':{'lat':null, 'lng':null} })
           console.log(response2.data)
         }
       }
     }
-    setSpin(false)
   }
 
   return (
