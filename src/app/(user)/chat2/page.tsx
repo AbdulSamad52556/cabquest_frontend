@@ -32,8 +32,6 @@ const UserChat = () => {
   const [rideid, setRideid] = useState<number>(0);
   const [name, setName] = useState<string>('');
 
-
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
     const token = localStorage.getItem('accessToken');
