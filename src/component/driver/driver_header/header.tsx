@@ -39,20 +39,20 @@ const Header = () => {
         const loc = { latitude: null, longitude: null }
         const response = await httpClient.post('auth/makeinactive', { email, loc })
       console.log(response.data)
-        const response2 = await httpClient.post('ride/liveloc', { 'email': email, 'coords': { 'lat': null, 'lng': null } })
-      console.log(response2.data)
-
-        // if (response.data['message'] === 'ok' && response2.data['message'] === 'ok') {
-          try {
-            localStorage.removeItem('daccessToken')
-            localStorage.removeItem('drefreshToken')
-            localStorage.removeItem('dname')
-            localStorage.removeItem('isdriver')
-            localStorage.removeItem('isactive')
-          }
-          finally {
-            navigate.push('/login_driver')
-          }
+      
+      // if (response.data['message'] === 'ok' && response2.data['message'] === 'ok') {
+        try {
+          localStorage.removeItem('daccessToken')
+          localStorage.removeItem('drefreshToken')
+          localStorage.removeItem('dname')
+          localStorage.removeItem('isdriver')
+          localStorage.removeItem('isactive')
+        }
+        finally {
+          navigate.push('/login_driver')
+          const response2 = await httpClient.post('ride/liveloc', { 'email': email, 'coords': { 'lat': null, 'lng': null } })
+        console.log(response2.data)
+        }
         // }
       }
     }
