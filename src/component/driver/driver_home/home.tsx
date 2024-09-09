@@ -102,6 +102,7 @@ const Home: React.FC<HomeProps> = ({ getlocation }) => {
       console.log(response1.data)
       if (response1.data['message'] === 'pending') {
         toast.warning('A request is pending')
+        setSpin(false)
       } else if (response1.data['message'] === 'ok') {
 
         const loc = { latitude: null, longitude: null }
