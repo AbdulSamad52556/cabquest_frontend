@@ -107,12 +107,12 @@ const Home: React.FC<HomeProps> = ({ getlocation }) => {
         const loc = { latitude: null, longitude: null }
         const response = await httpClient.post('auth/makeinactive', { email, loc })
         console.log(response.data)
-        const response2 = await httpClient.post('ride/liveloc', { 'email':email, 'coords':{'lat':null, 'lng':null} })
-        console.log(response2.data)
-        if (response.data['message'] === 'ok' && response2.data['message'] === 'ok') {
+        if (response.data['message'] === 'ok') {
           setActive(false)
           localStorage.removeItem('isactive')
           toast.success('duty stopped')
+          const response2 = await httpClient.post('ride/liveloc', { 'email':email, 'coords':{'lat':null, 'lng':null} })
+          console.log(response2.data)
         }
       }
     }
