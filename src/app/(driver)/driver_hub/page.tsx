@@ -183,7 +183,7 @@ const Page: React.FC = () => {
             total_km: distance,
             fare: price,
           };
-          const res = await httpClient.post('ride/createride', ridedata);
+          const res = await axios.post('https://ride.cabquest.quest/queue', ridedata);
           const data = res.data['communication']
           // const res2 = await axios.post('http://localhost:9641/queue',data,{
             const res2 = await axios.post('https://communication.cabquest.quest/queue',data,{
