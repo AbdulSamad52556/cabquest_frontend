@@ -1,0 +1,407 @@
+[33mcommit 1a34b4001c58eec8c8cfd3264f0835e6e9495c62[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 19:09:10 2024 +0530
+
+    chat_api_changed2
+
+[33mcommit 78fa60ea7d459e5c18bf988c6fa1ee03ea3ebac0[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 19:07:54 2024 +0530
+
+    chat_updated
+
+[33mcommit 753303250edb23b4f09b66ecceb666a6825bbbbf[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 09:35:33 2024 +0530
+
+    logout_api_changed
+
+[33mcommit 8f97139f73335a52c548bbcae2ea50d223f66cbc[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 09:28:19 2024 +0530
+
+    stop_work_changed
+
+[33mcommit d88d18a208c9254f1d7b2acbacb5a22214be2469[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 09:27:42 2024 +0530
+
+    stop_work_changed
+
+[33mcommit eedb06bf6ee259426b8406cef658cce24f79ee58[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 09:25:36 2024 +0530
+
+    stop_work_api_changed
+
+[33mcommit 8c3719b242bb85a44f473340d1f20331db4a9758[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 09:01:24 2024 +0530
+
+    work_stop_api
+
+[33mcommit 64e0774bdcbcc4da6388ec5709d9e43f89dae43f[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 01:37:27 2024 +0530
+
+    set_spin_changed_in_home_driver
+
+[33mcommit 9b57ea4a39b43db9f3c35c98c27b21fa33b6ae84[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 01:34:58 2024 +0530
+
+    work_start_api_changed
+
+[33mcommit aa2811f3eef23d48e74d659848a67dc9178f63b2[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 01:06:37 2024 +0530
+
+    liveloc_api_changed
+
+[33mcommit 351a2ea61ae39f27242c598388277de387d32487[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 00:58:37 2024 +0530
+
+    log_changed
+
+[33mcommit 2fffbce37deb3f23679cbcf4808e9a978891d935[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 00:54:39 2024 +0530
+
+    console_dutystatus
+
+[33mcommit 4f309dbb002891e63c440c15eecd4f9609fa7a7a[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 00:29:25 2024 +0530
+
+    login_driver_redirect
+
+[33mcommit 5e2e8c374d36892f84c5a7f514720618666ef319[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 00:26:15 2024 +0530
+
+    driver_hub_auto_redirect
+
+[33mcommit c3fe329a858fa4d16734bca2c0d394a0fc656283[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Sep 9 00:23:16 2024 +0530
+
+    for_checking_apis
+
+[33mcommit 24f03bcd0c1490f7c1ce4e2a9cf16a0734b5acbe[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Thu Aug 29 13:57:44 2024 +0530
+
+    files_download
+
+[33mcommit 2d593e0f10801cdba189905b71b9be254a0def4a[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Thu Aug 29 13:45:56 2024 +0530
+
+    files_letter_capital
+
+[33mcommit 28edb5f0352abf7a540fa35ea3c900d854bf5cfc[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Thu Aug 29 03:52:57 2024 +0530
+
+    againremoved
+
+[33mcommit be90b8aac5c8b6ff1db221cfc10e33e701c71b5b[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Thu Aug 29 03:48:27 2024 +0530
+
+    outerrequestremoved
+
+[33mcommit 9e3433e772d48b45f83497f01cce4784970f8328[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Thu Aug 29 03:39:03 2024 +0530
+
+    debbugpoint
+
+[33mcommit b2bb38254bb92c9ae89cb5f6262e9fc2f9e2ce0d[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Thu Aug 29 03:06:08 2024 +0530
+
+    with_credentials
+
+[33mcommit e38f6eb6241b3aa8be6d6da3118033f768372931[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Thu Aug 29 02:36:06 2024 +0530
+
+    headers_added
+
+[33mcommit 9d5b58639e986d2815bde8fa75b864925f6f2189[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Thu Aug 29 01:31:19 2024 +0530
+
+    whole_api_changed
+
+[33mcommit a153c624bd7a6c1f00e14ee2be395833c1bd1bef[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Wed Aug 28 21:17:54 2024 +0530
+
+    api_changed
+
+[33mcommit c0dd73c1ee8a5e7c61d297dab12d90b26278f2d6[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Sun Aug 25 20:39:17 2024 +0530
+
+    tried_req_gateway
+
+[33mcommit aaeb777bbdb7456fd2164cded2a04f897ad917e8[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Sat Aug 24 14:10:50 2024 +0530
+
+    files_through_gateway_debugged
+
+[33mcommit 085c90a9db796f3a4a377d443af427ab66c07cd7[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 20 00:27:42 2024 +0530
+
+    api_changed
+
+[33mcommit 12f235bad454bb00fd0ad4922e414d0c2956e99a[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Aug 19 23:35:42 2024 +0530
+
+    vehicle_auth
+
+[33mcommit 83326a28e33b832ac1c566fdf0588cdb33065989[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Aug 19 22:41:40 2024 +0530
+
+    kyc
+
+[33mcommit 1606f3e9122aa466dd46111ddcdf97f49dd6826b[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Aug 19 21:28:42 2024 +0530
+
+    https
+
+[33mcommit 22f713b551fa4004940d23e47fc531a1609056e3[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Aug 19 21:18:01 2024 +0530
+
+    auth
+
+[33mcommit 4aea633ca91a5dcc39450f0cd18431d4d309322e[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Aug 19 20:52:08 2024 +0530
+
+    notification
+
+[33mcommit d48cc51bddbc351222b60248c21b524512fc8e96[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Aug 19 19:29:07 2024 +0530
+
+    otp_ui
+
+[33mcommit 5122eddaf69268b7f091d3e1740eb3de80498cd9[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Aug 19 18:47:18 2024 +0530
+
+    ui_updated
+
+[33mcommit 67f7e93e3f4aaeadab3558c31da9d794177cdafb[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Aug 19 16:29:08 2024 +0530
+
+    api_changed
+
+[33mcommit a65bb0ca50775c792e1f5b864043da61febdbdaf[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Aug 19 15:58:14 2024 +0530
+
+    ip_given
+
+[33mcommit 602cb0edbfdd66568dbbcbe4039b1a157ad604df[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Aug 19 12:17:58 2024 +0530
+
+    url_given
+
+[33mcommit 52c7bf43bc816899d7c3c2c31575228a04ffacde[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Thu Aug 15 14:52:44 2024 +0530
+
+    login_error
+
+[33mcommit de938d1ea5f1f8b5b164375e176b44d0ffcac65f[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Thu Aug 15 13:41:42 2024 +0530
+
+    opt_and_searchingdriver
+
+[33mcommit 357d735a8993a4bc6e4145b509b295afa2c5e3b2[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Thu Aug 15 13:35:21 2024 +0530
+
+    salary_view_edited
+
+[33mcommit 35074c622952291294d680d1c1b7a0035f474b62[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Wed Aug 14 20:34:38 2024 +0530
+
+    searching_driver
+
+[33mcommit b161378f3eb257cbcf6964d03f13ab28bf203235[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Wed Aug 14 20:33:37 2024 +0530
+
+    salary_view
+
+[33mcommit c1b1cc9c3c4de0ed734ac523afc52a667fb17deb[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Wed Aug 14 20:21:27 2024 +0530
+
+    builderror3
+
+[33mcommit 7bc94a23b102fd74b365f3b1b6c4d286fdeda8c3[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Wed Aug 14 19:32:22 2024 +0530
+
+    wholelocalstorageissetup
+
+[33mcommit 32468f414907629a5df768655584abd16cd2b623[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Wed Aug 14 15:42:22 2024 +0530
+
+    header_localstorage
+
+[33mcommit d068269f36977acba265dbc0d572a0ecf09c6873[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Wed Aug 14 15:24:57 2024 +0530
+
+    buid2
+
+[33mcommit 10cb8f05ef76b95c91084e53d7621f5b2574c961[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Wed Aug 14 15:17:08 2024 +0530
+
+    build1_ready
+
+[33mcommit 04955172946c82ead691e65ed0facf5a9cb76edd[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Wed Aug 14 14:42:23 2024 +0530
+
+    finished
+
+[33mcommit f7fc5a80decd225d611ba36b4e4e27231d5dc1d7[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 15:21:37 2024 +0530
+
+    types_updated
+
+[33mcommit 16f809e8c9e71520f6ab278fce0cc873eecf28ef[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 14:58:19 2024 +0530
+
+    body_updated
+
+[33mcommit 133d6f69bb71fe1b0b549812e433a4ccbe262ec9[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 12:17:35 2024 +0530
+
+    udestination
+
+[33mcommit bf4ce7173f943de96c34e4261327dc4917cabf30[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 12:05:50 2024 +0530
+
+    user_chat_updated
+
+[33mcommit a2335fad435426ec11fb929947998fb8c474b13b[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 11:58:31 2024 +0530
+
+    driver_chat_updated
+
+[33mcommit 91234c87fe8317b346e0d8b65c48730f5fc93ed0[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 11:49:35 2024 +0530
+
+    salary_view_updated
+
+[33mcommit e7b97b86ebe5520fbc387667f003b53aa4ae8934[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 11:37:17 2024 +0530
+
+    error7
+
+[33mcommit 318c9356d922fe1db32eefaacc436e696fed2f9c[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 11:29:32 2024 +0530
+
+    error6
+
+[33mcommit 391b7c771f808c544185dfba513793f900f783c4[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 11:07:49 2024 +0530
+
+    error5
+
+[33mcommit 5d98bd384f0a94580bf54f2fac3b4da95b766038[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 11:01:58 2024 +0530
+
+    error4
+
+[33mcommit caa4b615f37864d70f17e6d57a8fe18b802dc85f[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 10:59:46 2024 +0530
+
+    typeerror4
+
+[33mcommit 3cdf76c6893fe3280aa5c4b029b3335c6151e1b6[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 10:57:30 2024 +0530
+
+    typeerror3
+
+[33mcommit bd32b9a228a2e4e458c379fc5624b2c028b389ad[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 10:52:26 2024 +0530
+
+    type_error2
+
+[33mcommit e207d76c935cf52b1b5718525084ef7e338ae187[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 10:44:10 2024 +0530
+
+    typeerror_deploying
+
+[33mcommit 0915d3625f8e08baeca2bdf983a1db04147724ea[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 10:22:02 2024 +0530
+
+    capital_letter_component
+
+[33mcommit 6bffa66e9ec3495bb196bad8ba4a996ac8b3b027[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Tue Aug 13 09:54:02 2024 +0530
+
+    finishing_touch
+
+[33mcommit 39b8444f2fcf7951f774da09c8ede0f191505099[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Fri Aug 9 23:46:32 2024 +0530
+
+    bug_fixing
+
+[33mcommit 65c5fd20b275f5bffb942b5bc605e65d855b0402[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Sun Aug 4 14:48:32 2024 +0530
+
+    payment done
+
+[33mcommit 7d14b8494961ffee46b4ae737d95c4f5843c2d06[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Mon Jul 29 09:47:05 2024 +0530
+
+    map_error
+
+[33mcommit b6403b6e83550dad7bfa26c3a55d5aaafa556b3a[m
+Author: Abdul Samad <abdulsamad52556@gmail.com>
+Date:   Sun Jul 21 18:29:34 2024 +0530
+
+    first commit

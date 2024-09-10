@@ -61,9 +61,6 @@ const UserChat = () => {
       socket.on('receive_message', (data) => {
         setMessages((prevMessages) => [...prevMessages, data]);
       });
-
-    
-      
       return () => {
         socket.emit('leave', { room });
         socket.off('receive_message');
