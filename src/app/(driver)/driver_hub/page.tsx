@@ -186,7 +186,7 @@ const Page: React.FC = () => {
           const res = await axios.post('https://ride.cabquest.quest/queue', ridedata);
           const data = res.data['communication']
           // const res2 = await axios.post('http://localhost:9641/queue',data,{
-            const res2 = await axios.post('https://communication.cabquest.quest/queue',data,{
+            const res2 = await axios.post('https://communication.cabquest.quest/createride',data,{
             headers: {
               'Content-Type': 'application/json',  // Adjust this if you're sending a different type of data
             },
